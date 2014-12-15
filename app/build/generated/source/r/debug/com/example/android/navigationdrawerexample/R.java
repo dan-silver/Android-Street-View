@@ -402,26 +402,18 @@ containing a value of this type.
         public static final int common_signin_btn_text_pressed_dark=0x7f020019;
         public static final int common_signin_btn_text_pressed_light=0x7f02001a;
         public static final int drawer_shadow=0x7f02001b;
-        public static final int earth=0x7f02001c;
-        public static final int ic_action_new=0x7f02001d;
-        public static final int ic_drawer=0x7f02001e;
-        public static final int ic_launcher=0x7f02001f;
-        public static final int ic_plusone_medium_off_client=0x7f020020;
-        public static final int ic_plusone_small_off_client=0x7f020021;
-        public static final int ic_plusone_standard_off_client=0x7f020022;
-        public static final int ic_plusone_tall_off_client=0x7f020023;
-        public static final int jupiter=0x7f020024;
-        public static final int mars=0x7f020025;
-        public static final int mercury=0x7f020026;
-        public static final int neptune=0x7f020027;
-        public static final int powered_by_google_dark=0x7f020028;
-        public static final int powered_by_google_light=0x7f020029;
-        public static final int saturn=0x7f02002a;
-        public static final int uranus=0x7f02002b;
-        public static final int venus=0x7f02002c;
+        public static final int ic_action_new=0x7f02001c;
+        public static final int ic_drawer=0x7f02001d;
+        public static final int ic_launcher=0x7f02001e;
+        public static final int ic_plusone_medium_off_client=0x7f02001f;
+        public static final int ic_plusone_small_off_client=0x7f020020;
+        public static final int ic_plusone_standard_off_client=0x7f020021;
+        public static final int ic_plusone_tall_off_client=0x7f020022;
+        public static final int powered_by_google_dark=0x7f020023;
+        public static final int powered_by_google_light=0x7f020024;
     }
     public static final class id {
-        public static final int action_favoriteLocation=0x7f0b001d;
+        public static final int action_favoriteLocation=0x7f0b001e;
         public static final int adjust_height=0x7f0b0000;
         public static final int adjust_width=0x7f0b0001;
         public static final int book_now=0x7f0b0010;
@@ -436,7 +428,7 @@ containing a value of this type.
         public static final int holo_dark=0x7f0b0007;
         public static final int holo_light=0x7f0b0008;
         public static final int hybrid=0x7f0b0003;
-        public static final int image=0x7f0b001c;
+        public static final int image=0x7f0b001d;
         public static final int left_drawer=0x7f0b0019;
         public static final int match_parent=0x7f0b000e;
         public static final int monochrome=0x7f0b0016;
@@ -450,6 +442,7 @@ containing a value of this type.
         public static final int strict_sandbox=0x7f0b000b;
         public static final int terrain=0x7f0b0006;
         public static final int textView=0x7f0b001a;
+        public static final int textView2=0x7f0b001c;
         public static final int wrap_content=0x7f0b000f;
     }
     public static final class integer {
@@ -460,7 +453,8 @@ containing a value of this type.
         public static final int drawer_list_item=0x7f030001;
         public static final int dummy_frag=0x7f030002;
         public static final int explore_frag=0x7f030003;
-        public static final int fragment_planet=0x7f030004;
+        public static final int favorited_locations=0x7f030004;
+        public static final int fragment_planet=0x7f030005;
     }
     public static final class menu {
         public static final int main=0x7f0a0000;

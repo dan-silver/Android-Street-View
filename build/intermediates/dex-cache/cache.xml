@@ -23,6 +23,13 @@
         <dex dex="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/classes-6dcb3fee7b3099595c30799282abbae76db7d94d.jar" />
     </item>
     <item
+        jar="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/exploded-aar/com.github.satyan/sugar/1.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="07e07903922250dabf50c7d131d6fa069a050305">
+        <dex dex="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/classes-6d422399798ce03151c91fda4d7ba4743183e027.jar" />
+    </item>
+    <item
         jar="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"
