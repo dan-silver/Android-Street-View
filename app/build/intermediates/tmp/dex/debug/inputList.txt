@@ -1,0 +1,5 @@
+/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/classes/debug
+/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-a97bf1db9dece982aa53549460ddb3f8fbb43eae.jar
+/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-80834b1053da28f5caa886e028a1a3d1124387e3.jar
+/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/classes-c7c9b8d69dc86bfdf26ac576ece32c64bf501778.jar
+/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/classes-6dcb3fee7b3099595c30799282abbae76db7d94d.jar
