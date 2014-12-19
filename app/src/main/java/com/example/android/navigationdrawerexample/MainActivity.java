@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (savedInstanceState == null) {
-            selectItem(0);
+            selectItem(0, null);
         }
     }
 
@@ -125,11 +125,17 @@ public class MainActivity extends Activity {
         }
     }
 
+    public void switchToExploreWithSaved(int position) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("POSITION", position);
+        selectItem(0, bundle);
+    }
+
     /* The click listener for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
+            selectItem(position, null);
         }
     }
 
@@ -140,14 +146,14 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void selectItem(int position) {
+    public void selectItem(int position, Bundle bundle) {
         //convert position into fragment
+        if (previousSelection == position) {
+            mDrawerLayout.closeDrawer(mDrawerList);
+            return;
+        }
         Fragment fragment;
         if (position == 0) {
-            if (previousSelection == position) {
-                mDrawerLayout.closeDrawer(mDrawerList);
-                return;
-            }
             fragment = new ExploreFragment();
             //displayMenuItem(R.id.action_favoriteLocation, true);
         } else if (position == 1) {
@@ -156,7 +162,9 @@ public class MainActivity extends Activity {
             //displayMenuItem(R.id.action_favoriteLocation, false);
             fragment = new DummyFragment();
         }
-
+        if (bundle != null) {
+            fragment.setArguments(bundle);
+        }
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 

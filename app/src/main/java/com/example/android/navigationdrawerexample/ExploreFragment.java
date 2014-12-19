@@ -6,6 +6,7 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
 import com.google.android.gms.maps.StreetViewPanorama;
@@ -19,14 +20,27 @@ import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
 public class ExploreFragment extends Fragment implements OnStreetViewPanoramaReadyCallback {
     private static StreetViewPanorama streetViewPanorama;
     private static View view;
+    private Boolean useSavedLoc;
+    private StreetViewLocationRecord savedLocation;
 
     public ExploreFragment() {
 
     }
 
+    public void setLocation(StreetViewLocationRecord loc) {
+        LatLng loc_ = new LatLng(loc.getLatatidue(), loc.getLongitude());
+        streetViewPanorama.setPosition(loc_);
+        StreetViewPanoramaCamera camera = new StreetViewPanoramaCamera.Builder()
+                .tilt((float) loc.getTilt())
+                .bearing((float) loc.getBearing())
+                .build();
+        streetViewPanorama.animateTo(camera, 1);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        useSavedLoc = false;
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null)
@@ -47,6 +61,17 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
 
         ((MainActivity) getActivity()).displayMenuItem(R.id.action_favoriteLocation, true);
 
+
+
+        Bundle args = getArguments();
+        if (args != null && args.containsKey("POSITION")) {
+            useSavedLoc = true;
+            int position = args.getInt("POSITION");
+            savedLocation = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class).get(position);
+            Toast.makeText(getActivity().getApplicationContext(), "in Explore: " + position, Toast.LENGTH_SHORT).show();
+            setLocation(savedLocation);
+
+        }
         return view;
     }
 
@@ -55,7 +80,7 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
         StreetViewPanoramaCamera camera = streetViewPanorama.getPanoramaCamera();
 
 
-        (new streetViewLocation()).setLatatidue(location.latitude)
+        (new StreetViewLocationRecord()).setLatatidue(location.latitude)
                                   .setLongitude(location.longitude)
                                   .setTilt(camera.tilt)
                                   .setBearing(camera.bearing)
@@ -65,8 +90,9 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
     @Override
     public void onStreetViewPanoramaReady(StreetViewPanorama panorama) {
         streetViewPanorama = panorama;
-        panorama.setPosition(new LatLng(-33.87365, 151.20689));
-
+        if (!useSavedLoc) {
+            panorama.setPosition(new LatLng(48.856897, 2.298041));
+        }
     }
 
     @Override

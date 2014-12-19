@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/relative_container"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content">
+
+    <ImageView
+    android:id="@+id/loaded_image"
+    android:layout_width="400dp"
+    android:layout_height="200dp"/>
+
+    <ProgressBar
+    android:id="@+id/progress"
+    style="?android:attr/progressBarStyleLarge"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:visibility="visible"/>
+</RelativeLayout>

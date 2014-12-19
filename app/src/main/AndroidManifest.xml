@@ -33,7 +33,7 @@
         android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
         android:name="com.orm.SugarApp">
 
-        <meta-data android:name="DATABASE" android:value="sugar_example2.db" />
+        <meta-data android:name="DATABASE" android:value="sugar_example3.db" />
         <meta-data android:name="VERSION" android:value="1" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.example" />
