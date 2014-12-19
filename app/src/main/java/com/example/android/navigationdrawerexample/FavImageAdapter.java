@@ -10,9 +10,12 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import java.net.URL;
+
 /**
  * Created by dan-silver on 12/15/14.
  */
+
 public class FavImageAdapter extends BaseAdapter {
     private Context mContext;
 
@@ -41,12 +44,13 @@ public class FavImageAdapter extends BaseAdapter {
             row = convertView;
         }
 
-        AsyncImageFetcher t = new AsyncImageFetcher();
+        StreetViewLocationRecord loc = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class).get(position);
+
+        AsyncImageFetcher t = new AsyncImageFetcher(mContext);
         t.setImageView((ImageView) row.findViewById(R.id.loaded_image));
         t.setLoadingIcon((ProgressBar) row.findViewById(R.id.progress));
-        StreetViewLocationRecord loc = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class).get(position);
-        t.setLoc(loc);
-        t.execute();
+        t.execute("https://maps.googleapis.com/maps/api/streetview?size=800x400&location="+loc.getLatatidue()+","+loc.getLongitude()+"&fov=90&heading=" +
+                        loc.getBearing() + "&pitch=" + loc.getTilt());
 
         return row;
     }
