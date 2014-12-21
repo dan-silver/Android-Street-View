@@ -5,7 +5,6 @@ import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -24,18 +23,17 @@ import org.apache.commons.io.FilenameUtils;
  * Created by dan-silver on 12/15/14.
  */
 
-//handles caching and loading icon
+//handles caching (2 level) and loading icon
 class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
     private ProgressBar loadingIcon;
     private ImageView iv;
-    Exception exception;
+    private Exception exception;
     private Context mContext;
     private static HashMap<String, Bitmap> cache;
 
     public AsyncImageFetcher(Context c) {
         mContext = c;
-        exception = null;
-        if (cache == null ) {
+        if (cache == null) {
             cache = new HashMap<>();
         }
     }
@@ -44,7 +42,6 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
         Bitmap bmp;
         //main memory cache
         if (cache.containsKey(s[0])) {
-            Log.v("SILVER", "using mm cache");
             bmp = cache.get(s[0]);
         } else {
             //try load from hard disk
@@ -55,12 +52,9 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
                     bmp = BitmapFactory.decodeStream((new URL(s[0])).openConnection().getInputStream());
                 } catch (Exception e) {
                     exception = e;
-                    Log.v("SILVER", e.toString());
                 }
                 cache.put(s[0], bmp);
                 saveToInternalStorage(bmp, s[0]);
-            } else {
-                Log.v("SILVER", "using internal storage");
             }
         }
         return bmp;
@@ -68,17 +62,21 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
 
     protected void onPostExecute(Bitmap bmp) {
         if (exception == null && bmp != null) {
-            loadingIcon.setVisibility(View.INVISIBLE);
+            if (loadingIcon != null) loadingIcon.setVisibility(View.INVISIBLE);
             iv.setImageBitmap(bmp);
         }
+
+        //otherwise try again?
     }
 
-    public void setLoadingIcon(ProgressBar loadingIcon) {
+    public AsyncImageFetcher setLoadingIcon(ProgressBar loadingIcon) {
         this.loadingIcon = loadingIcon;
+        return this;
     }
 
-    public void setImageView(ImageView iv) {
+    public AsyncImageFetcher setImageView(ImageView iv) {
         this.iv = iv;
+        return this;
     }
 
     private File getFile(String URL) {
@@ -98,7 +96,7 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
         return bmp;
     }
 
-    private void saveToInternalStorage(Bitmap bitmapImage, String URL){
+    private void saveToInternalStorage(Bitmap bitmapImage, String URL) {
         File myPath = getFile(URL);
         FileOutputStream fos;
         try {
@@ -110,5 +108,4 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
             e.printStackTrace();
         }
     }
-
 }

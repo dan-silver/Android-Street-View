@@ -1,7 +1,9 @@
 package com.example.android.navigationdrawerexample;
 
 import android.app.Fragment;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,18 +30,21 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
     }
 
     public void setLocation(StreetViewLocationRecord loc) {
+        Log.v(MainActivity.LOG, "setLocation()");
         LatLng loc_ = new LatLng(loc.getLatatidue(), loc.getLongitude());
         streetViewPanorama.setPosition(loc_);
-        StreetViewPanoramaCamera camera = new StreetViewPanoramaCamera.Builder()
+        streetViewPanorama.animateTo(
+            new StreetViewPanoramaCamera.Builder()
                 .tilt((float) loc.getTilt())
                 .bearing((float) loc.getBearing())
-                .build();
-        streetViewPanorama.animateTo(camera, 1);
+                .build(),
+            0);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(MainActivity.LOG, "onCreateView()");
         useSavedLoc = false;
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
@@ -48,7 +53,6 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
         }
         try {
             view = inflater.inflate(R.layout.explore_frag, container, false);
-            //getActivity().setTitle(planet);
 
             StreetViewPanoramaFragment streetViewPanoramaFragment =
                     (StreetViewPanoramaFragment) getFragmentManager()
@@ -56,6 +60,7 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
 
             streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
         } catch (InflateException e) {
+            Log.v(MainActivity.LOG, "onCreateView() caught error => map already there");
             /* map is already there, just return view as it is */
         }
 
@@ -65,6 +70,7 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
 
         Bundle args = getArguments();
         if (args != null && args.containsKey("POSITION")) {
+            Log.v(MainActivity.LOG, "args contained key position");
             useSavedLoc = true;
             int position = args.getInt("POSITION");
             savedLocation = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class).get(position);
@@ -76,6 +82,7 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
     }
 
     public void getLocation() {
+        Log.v(MainActivity.LOG, "getLocation()");
         LatLng location = streetViewPanorama.getLocation().position;
         StreetViewPanoramaCamera camera = streetViewPanorama.getPanoramaCamera();
 
@@ -89,14 +96,16 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
 
     @Override
     public void onStreetViewPanoramaReady(StreetViewPanorama panorama) {
+        Log.v(MainActivity.LOG, "onStreetViewPanoramaReady()");
         streetViewPanorama = panorama;
         if (!useSavedLoc) {
-            panorama.setPosition(new LatLng(48.856897, 2.298041));
+            panorama.setPosition(new LatLng(38.8976701, -77.0363995));
         }
     }
 
     @Override
     public void onStop() {
+        Log.v(MainActivity.LOG, "onStop()");
         ((MainActivity) getActivity()).displayMenuItem(R.id.action_favoriteLocation, false);
         super.onStop();
     }
