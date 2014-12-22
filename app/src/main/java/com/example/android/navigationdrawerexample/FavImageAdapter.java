@@ -1,16 +1,14 @@
 package com.example.android.navigationdrawerexample;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import java.net.URL;
+import com.orm.query.Select;
 
 /**
  * Created by dan-silver on 12/15/14.
@@ -24,7 +22,7 @@ public class FavImageAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return StreetViewLocationRecord.listAll(StreetViewLocationRecord.class).size();
+        return (int) Select.from(StreetViewLocationRecord.class).count();
     }
 
     public Object getItem(int position) {
@@ -44,12 +42,12 @@ public class FavImageAdapter extends BaseAdapter {
             row = convertView;
         }
 
-        StreetViewLocationRecord loc = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class).get(position);
+        StreetViewLocationRecord loc = Select.from(StreetViewLocationRecord.class).orderBy("id").limit(position + ", 1").list().get(0);
 
         new AsyncImageFetcher(mContext)
               .setImageView((ImageView) row.findViewById(R.id.loaded_image))
               .setLoadingIcon((ProgressBar) row.findViewById(R.id.progress))
-              .execute("https://maps.googleapis.com/maps/api/streetview?size=800x400&location="+loc.getLatatidue()+","+loc.getLongitude()+"&fov=90&heading=" +
+              .execute("https://maps.googleapis.com/maps/api/streetview?size=800x400&location="+loc.getLatitude()+","+loc.getLongitude()+"&fov=90&heading=" +
                         loc.getBearing() + "&pitch=" + loc.getTilt());
 
         return row;

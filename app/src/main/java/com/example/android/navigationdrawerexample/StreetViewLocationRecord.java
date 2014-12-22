@@ -6,18 +6,18 @@ public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationReco
 
     private double tilt;
     private double bearing;
-    private double latatidue;
+    private double latitude;
     private double longitude;
 
     public StreetViewLocationRecord() {
     }
 
-    public double getLatatidue() {
-        return latatidue;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public StreetViewLocationRecord setLatatidue(double latatidue) {
-        this.latatidue = latatidue;
+    public StreetViewLocationRecord setLatitude(double latitude) {
+        this.latitude = latitude;
         return this;
     }
 

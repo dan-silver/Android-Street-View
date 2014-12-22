@@ -1,7 +1,6 @@
 package com.example.android.navigationdrawerexample;
 
 import android.app.Fragment;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.InflateException;
@@ -31,14 +30,14 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
 
     public void setLocation(StreetViewLocationRecord loc) {
         Log.v(MainActivity.LOG, "setLocation()");
-        LatLng loc_ = new LatLng(loc.getLatatidue(), loc.getLongitude());
+        LatLng loc_ = new LatLng(loc.getLatitude(), loc.getLongitude());
         streetViewPanorama.setPosition(loc_);
         streetViewPanorama.animateTo(
-            new StreetViewPanoramaCamera.Builder()
-                .tilt((float) loc.getTilt())
-                .bearing((float) loc.getBearing())
-                .build(),
-            0);
+                new StreetViewPanoramaCamera.Builder()
+                        .tilt((float) loc.getTilt())
+                        .bearing((float) loc.getBearing())
+                        .build(),
+                0);
     }
 
     @Override
@@ -87,7 +86,7 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
         StreetViewPanoramaCamera camera = streetViewPanorama.getPanoramaCamera();
 
 
-        (new StreetViewLocationRecord()).setLatatidue(location.latitude)
+        (new StreetViewLocationRecord()).setLatitude(location.latitude)
                                   .setLongitude(location.longitude)
                                   .setTilt(camera.tilt)
                                   .setBearing(camera.bearing)

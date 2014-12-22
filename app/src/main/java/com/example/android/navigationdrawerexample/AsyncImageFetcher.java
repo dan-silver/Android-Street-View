@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,7 +31,17 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
     private ImageView iv;
     private Exception exception;
     private Context mContext;
+    private String URL;
     private static HashMap<String, Bitmap> cache;
+
+    public void clearCache() {
+        cache = null;
+        ContextWrapper cw = new ContextWrapper(mContext);
+        File dir = cw.getDir("streetViewImages", Context.MODE_PRIVATE);
+        if (dir.isDirectory())
+            for (String child: dir.list())
+                new File(dir, child).delete();
+    }
 
     public AsyncImageFetcher(Context c) {
         mContext = c;
@@ -40,21 +52,21 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
 
     protected Bitmap doInBackground(String... s) {
         Bitmap bmp;
+        URL = s[0];
+
         //main memory cache
-        if (cache.containsKey(s[0])) {
-            bmp = cache.get(s[0]);
+        if (cache.containsKey(URL)) {
+            bmp = cache.get(URL);
         } else {
             //try load from hard disk
-            bmp = loadImageFromStorage(s[0]);
-            if (bmp == null) {
+            bmp = loadImageFromStorage(URL);
+            if (bmp == null && isNetworkConnected()) {
                 //fetch from web
                 try {
-                    bmp = BitmapFactory.decodeStream((new URL(s[0])).openConnection().getInputStream());
+                    bmp = BitmapFactory.decodeStream((new URL(URL)).openConnection().getInputStream());
                 } catch (Exception e) {
                     exception = e;
                 }
-                cache.put(s[0], bmp);
-                saveToInternalStorage(bmp, s[0]);
             }
         }
         return bmp;
@@ -64,6 +76,8 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
         if (exception == null && bmp != null) {
             if (loadingIcon != null) loadingIcon.setVisibility(View.INVISIBLE);
             iv.setImageBitmap(bmp);
+            cache.put(URL, bmp);
+            saveToInternalStorage(bmp, URL);
         }
 
         //otherwise try again?
@@ -108,4 +122,13 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
             e.printStackTrace();
         }
     }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        // There are no active networks.
+        if (ni == null) return false;
+        else return true;
+    }
+
 }
