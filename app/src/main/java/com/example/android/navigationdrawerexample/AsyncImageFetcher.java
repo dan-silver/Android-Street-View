@@ -51,35 +51,34 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
     }
 
     protected Bitmap doInBackground(String... s) {
-        Bitmap bmp;
         URL = s[0];
 
         //main memory cache
         if (cache.containsKey(URL)) {
-            bmp = cache.get(URL);
+            return cache.get(URL);
         } else {
             //try load from hard disk
-            bmp = loadImageFromStorage(URL);
+            Bitmap bmp = loadImageFromStorage(URL);
             if (bmp == null && isNetworkConnected()) {
                 //fetch from web
                 try {
                     bmp = BitmapFactory.decodeStream((new URL(URL)).openConnection().getInputStream());
+                    cache.put(URL, bmp);
+                    saveToInternalStorage(bmp, URL);
+                    return bmp;
                 } catch (Exception e) {
                     exception = e;
                 }
             }
         }
-        return bmp;
+        return null;
     }
 
     protected void onPostExecute(Bitmap bmp) {
         if (exception == null && bmp != null) {
             if (loadingIcon != null) loadingIcon.setVisibility(View.INVISIBLE);
             iv.setImageBitmap(bmp);
-            cache.put(URL, bmp);
-            saveToInternalStorage(bmp, URL);
         }
-
         //otherwise try again?
     }
 
