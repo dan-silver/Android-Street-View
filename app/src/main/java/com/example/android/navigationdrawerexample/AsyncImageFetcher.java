@@ -35,7 +35,7 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
     private static HashMap<String, Bitmap> cache;
 
     public void clearCache() {
-        cache = null;
+        cache.clear();
         ContextWrapper cw = new ContextWrapper(mContext);
         File dir = cw.getDir("streetViewImages", Context.MODE_PRIVATE);
         if (dir.isDirectory())
