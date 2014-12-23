@@ -3,9 +3,11 @@ package com.example.android.navigationdrawerexample;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +49,7 @@ public class FavoritedLocsFragment extends Fragment {
     public class MultiChoiceModeListener implements GridView.MultiChoiceModeListener {
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.setTitle("Select Items");
+            mode.getMenuInflater().inflate(R.menu.multi_select, menu);
             return true;
         }
 
@@ -55,7 +58,19 @@ public class FavoritedLocsFragment extends Fragment {
         }
 
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            return true;
+            switch (item.getItemId()) {
+                case R.id.action_discard_favorites:
+                    int len = grid.getCount();
+                    SparseBooleanArray checked = grid.getCheckedItemPositions();
+                    for (int i = 0; i < len; i++)
+                        if (checked.get(i)) {
+                            ((FavImageAdapter) grid.getAdapter()).removeItem(i);
+                            grid.invalidateViews();
+                        }
+                    return true;
+                default:
+                    return true;
+            }
         }
 
         public void onDestroyActionMode(ActionMode mode) {

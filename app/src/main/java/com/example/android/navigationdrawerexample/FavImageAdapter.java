@@ -33,6 +33,10 @@ public class FavImageAdapter extends BaseAdapter {
         return 0;
     }
 
+    public void removeItem(int position) {
+        Select.from(StreetViewLocationRecord.class).orderBy("id").limit(position + ", 1").list().get(0).delete();
+    }
+
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
