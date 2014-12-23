@@ -54,9 +54,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         //clear cache
-
-        new AsyncImageFetcher(getApplication()).clearCache();
-        List<StreetViewLocationRecord> something = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class);
+        //new AsyncImageFetcher(getApplication()).clearCache();
 
         setContentView(R.layout.activity_main);
 

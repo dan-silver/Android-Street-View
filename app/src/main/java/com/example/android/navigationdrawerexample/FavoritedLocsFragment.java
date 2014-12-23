@@ -25,18 +25,15 @@ public class FavoritedLocsFragment extends Fragment {
         final Activity activity = getActivity();
 
         View v = inflater.inflate(R.layout.favorited_locations, container, false);
-        GridView gridview = (GridView) v.findViewById(R.id.favorited_locations_grid);
+        final GridView gridview = (GridView) v.findViewById(R.id.favorited_locations_grid);
         gridview.setAdapter(new FavImageAdapter(getActivity().getApplicationContext()));
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                if (activity instanceof MainActivity) {
+                if (activity instanceof MainActivity)
                     ((MainActivity) activity).switchToExploreWithSaved(position);
-//                    switchToAndSetCamera();
-                }
             }
         });
-
         return v;
     }
 }
