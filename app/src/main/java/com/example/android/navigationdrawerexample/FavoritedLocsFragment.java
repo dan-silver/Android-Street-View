@@ -62,11 +62,13 @@ public class FavoritedLocsFragment extends Fragment {
                 case R.id.action_discard_favorites:
                     int len = grid.getCount();
                     SparseBooleanArray checked = grid.getCheckedItemPositions();
-                    for (int i = 0; i < len; i++)
+                    //count down so positions don't change when multiple items are removed
+                    for (int i = len - 1; i > 0; i--)
                         if (checked.get(i)) {
                             ((FavImageAdapter) grid.getAdapter()).removeItem(i);
                             grid.invalidateViews();
                         }
+
                     return true;
                 default:
                     return true;

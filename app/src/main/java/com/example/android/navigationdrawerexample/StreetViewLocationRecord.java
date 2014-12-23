@@ -9,8 +9,7 @@ public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationReco
     private double latitude;
     private double longitude;
 
-    public StreetViewLocationRecord() {
-    }
+    public StreetViewLocationRecord() {}
 
     public double getLatitude() {
         return latitude;

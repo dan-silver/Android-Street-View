@@ -51,7 +51,7 @@ public class FavImageAdapter extends BaseAdapter {
         new AsyncImageFetcher(mContext)
               .setImageView((ImageView) row.findViewById(R.id.loaded_image))
               .setLoadingIcon((ProgressBar) row.findViewById(R.id.progress))
-              .execute("https://maps.googleapis.com/maps/api/streetview?size=800x400&location="+loc.getLatitude()+","+loc.getLongitude()+"&fov=90&heading=" +
+              .execute("https://maps.googleapis.com/maps/api/streetview?size=640x400&location="+loc.getLatitude()+","+loc.getLongitude()+"&fov=90&heading=" +
                         loc.getBearing() + "&pitch=" + loc.getTilt());
 
         return row;

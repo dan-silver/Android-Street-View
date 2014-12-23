@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="5dp">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <GridView
         android:id="@+id/favorited_locations_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="400dp"
+        android:columnWidth="360dp"
         android:numColumns="auto_fit"
-        android:verticalSpacing="5dp"
-        android:horizontalSpacing="5dp"
-        android:stretchMode="columnWidth"
+        android:verticalSpacing="15dp"
+        android:horizontalSpacing="0dp"
+        android:stretchMode="spacingWidthUniform"
         android:gravity="center" />
 </LinearLayout>

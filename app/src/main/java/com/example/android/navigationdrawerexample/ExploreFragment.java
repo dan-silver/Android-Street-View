@@ -98,7 +98,7 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
         Log.v(MainActivity.LOG, "onStreetViewPanoramaReady()");
         streetViewPanorama = panorama;
         if (!useSavedLoc) {
-            panorama.setPosition(new LatLng(38.8976701, -77.0363995));
+            setLocation(PresetLocations.getRandomLocation());
         }
     }
 

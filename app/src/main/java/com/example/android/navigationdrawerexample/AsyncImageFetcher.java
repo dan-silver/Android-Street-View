@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -52,6 +53,7 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
 
     protected Bitmap doInBackground(String... s) {
         URL = s[0];
+        Log.v(MainActivity.LOG, URL);
 
         //main memory cache
         if (cache.containsKey(URL)) {
@@ -126,8 +128,7 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
         ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
         // There are no active networks.
-        if (ni == null) return false;
-        else return true;
+        return ni != null;
     }
 
 }
