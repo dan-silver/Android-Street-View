@@ -15,6 +15,10 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_random"
+        android:icon="@drawable/dice"
+        android:title="@string/random"
+        android:showAsAction="ifRoom" />
     <item android:id="@+id/action_favoriteLocation"
         android:icon="@drawable/ic_action_camera"
         android:title="@string/action_favorite"

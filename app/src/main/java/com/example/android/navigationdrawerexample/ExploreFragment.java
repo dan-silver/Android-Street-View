@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -22,7 +25,6 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
     private static StreetViewPanorama streetViewPanorama;
     private static View view;
     private Boolean useSavedLoc;
-    private StreetViewLocationRecord savedLocation;
 
     public ExploreFragment() {
 
@@ -37,12 +39,33 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
                         .tilt((float) loc.getTilt())
                         .bearing((float) loc.getBearing())
                         .build(),
-                0);
+                1);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_favoriteLocation:
+                getLocation();
+                return true;
+            case R.id.action_random:
+                setLocation(PresetLocations.getRandomLocation());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        super.onCreateOptionsMenu(menu,inflater);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         Log.v(MainActivity.LOG, "onCreateView()");
         useSavedLoc = false;
         if (view != null) {
@@ -63,16 +86,12 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
             /* map is already there, just return view as it is */
         }
 
-        ((MainActivity) getActivity()).displayMenuItem(R.id.action_favoriteLocation, true);
-
-
-
         Bundle args = getArguments();
         if (args != null && args.containsKey("POSITION")) {
             Log.v(MainActivity.LOG, "args contained key position");
             useSavedLoc = true;
             int position = args.getInt("POSITION");
-            savedLocation = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class).get(position);
+            StreetViewLocationRecord savedLocation = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class).get(position);
             Toast.makeText(getActivity().getApplicationContext(), "in Explore: " + position, Toast.LENGTH_SHORT).show();
             setLocation(savedLocation);
 
@@ -91,7 +110,8 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
                                   .setTilt(camera.tilt)
                                   .setBearing(camera.bearing)
                                   .save();
-        }
+        Toast.makeText(getActivity().getApplicationContext(), "Saved!", Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public void onStreetViewPanoramaReady(StreetViewPanorama panorama) {
@@ -105,7 +125,6 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
     @Override
     public void onStop() {
         Log.v(MainActivity.LOG, "onStop()");
-        ((MainActivity) getActivity()).displayMenuItem(R.id.action_favoriteLocation, false);
         super.onStop();
     }
 

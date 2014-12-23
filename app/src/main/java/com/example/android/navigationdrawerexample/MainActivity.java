@@ -85,12 +85,12 @@ public class MainActivity extends Activity {
                 ) {
             public void onDrawerClosed(View view) {
                 getActionBar().setTitle(mTitle);
-//                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
                 getActionBar().setTitle(mDrawerTitle);
-//                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -102,8 +102,6 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -113,7 +111,8 @@ public class MainActivity extends Activity {
         actionBar = menu;
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        actionBar.findItem(R.id.action_favoriteLocation).setVisible(!drawerOpen);
+        for (int i = 0; i < actionBar.size(); i++)
+            actionBar.getItem(i).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(actionBar);
     }
 
@@ -126,10 +125,6 @@ public class MainActivity extends Activity {
         }
 
         switch (item.getItemId()) {
-            case R.id.action_favoriteLocation:
-                ExploreFragment exploreFrag = (ExploreFragment) getFragmentManager().findFragmentById(R.id.content_frame);
-                exploreFrag.getLocation();
-                return true;
             default:
                return super.onOptionsItemSelected(item);
         }
@@ -145,13 +140,6 @@ public class MainActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position, null);
-        }
-    }
-
-    public void displayMenuItem(int item, boolean visible) {
-        if (actionBar != null) {
-            MenuItem menuItem = actionBar.findItem(item);
-            if (menuItem != null) menuItem.setVisible(visible);
         }
     }
 
