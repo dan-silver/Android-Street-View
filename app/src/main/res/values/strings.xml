@@ -15,11 +15,11 @@
   -->
 
 <resources>
-    <string name="app_name">Navigation Drawer Example</string>
+    <string name="app_name">StreetView Explorer</string>
     <string-array name="navigation_tabs">
         <item>Explore</item>
-        <item>My Favorites</item>
-        <item>Most Popular</item>
+        <item>Favorites</item>
+        <item>Popular</item>
     </string-array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

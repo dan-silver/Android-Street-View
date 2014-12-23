@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         //clear cache
-        new AsyncImageFetcher(getApplication()).clearCache();
+//        new AsyncImageFetcher(this).clearCache();
 
         setContentView(R.layout.activity_main);
 

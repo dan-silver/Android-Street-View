@@ -55,31 +55,44 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
         URL = s[0];
         Log.v(MainActivity.LOG, URL);
 
-        //main memory cache
+        //try main memory cache
         if (cache.containsKey(URL)) {
+            Log.v(MainActivity.LOG, "FOUND IN MAIN CACHE");
             return cache.get(URL);
-        } else {
-            //try load from hard disk
-            Bitmap bmp = loadImageFromStorage(URL);
-            if (bmp == null && isNetworkConnected()) {
-                //fetch from web
-                try {
-                    bmp = BitmapFactory.decodeStream((new URL(URL)).openConnection().getInputStream());
-                    cache.put(URL, bmp);
-                    saveToInternalStorage(bmp, URL);
-                    return bmp;
-                } catch (Exception e) {
-                    exception = e;
+        }
+
+        //try load from hard disk
+        Bitmap bmp = loadImageFromStorage(URL);
+        if (bmp != null) {
+            return bmp;
+        }
+
+        //fetch from web
+        if (isNetworkConnected()) {
+            try {
+                bmp = BitmapFactory.decodeStream((new URL(URL)).openConnection().getInputStream());
+                if (bmp != null) {
+                    saveToInternalStorage(bmp);
                 }
+            } catch (Exception e) {
+                exception = e;
             }
         }
-        return null;
+        return bmp;
     }
 
     protected void onPostExecute(Bitmap bmp) {
+        Log.v(MainActivity.LOG, "onPostExecute");
         if (exception == null && bmp != null) {
-            if (loadingIcon != null) loadingIcon.setVisibility(View.INVISIBLE);
+            if (loadingIcon != null)
+                loadingIcon.setVisibility(View.INVISIBLE);
             iv.setImageBitmap(bmp);
+            Log.v(MainActivity.LOG, "set image on iv!!!");
+
+            //confirm bmp is in main memory
+            if (!cache.containsKey(URL)) {
+                cache.put(URL, bmp);
+            }
         }
         //otherwise try again?
     }
@@ -111,7 +124,7 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
         return bmp;
     }
 
-    private void saveToInternalStorage(Bitmap bitmapImage, String URL) {
+    private void saveToInternalStorage(Bitmap bitmapImage) {
         File myPath = getFile(URL);
         FileOutputStream fos;
         try {

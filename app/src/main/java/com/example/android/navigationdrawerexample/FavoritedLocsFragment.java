@@ -68,7 +68,9 @@ public class FavoritedLocsFragment extends Fragment {
                             ((FavImageAdapter) grid.getAdapter()).removeItem(i);
                             grid.invalidateViews();
                         }
-
+                    //now deselect all elements
+                    for (int i = 0; i < grid.getCount(); i++)
+                        grid.setItemChecked(i, false);
                     return true;
                 default:
                     return true;
