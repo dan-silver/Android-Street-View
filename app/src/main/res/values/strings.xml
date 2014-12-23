@@ -26,4 +26,6 @@
     <string name="action_websearch">Web search</string>
     <string name="action_favorite">Favorite Location</string>
     <string name="random">Random Location</string>
+
+
 </resources>

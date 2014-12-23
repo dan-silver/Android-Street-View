@@ -87,7 +87,7 @@ class AsyncImageFetcher extends AsyncTask<String, Void, Bitmap> {
             if (loadingIcon != null)
                 loadingIcon.setVisibility(View.INVISIBLE);
             iv.setImageBitmap(bmp);
-            Log.v(MainActivity.LOG, "set image on iv!!!");
+            Log.v(MainActivity.LOG, "set image on iv!");
 
             //confirm bmp is in main memory
             if (!cache.containsKey(URL)) {
