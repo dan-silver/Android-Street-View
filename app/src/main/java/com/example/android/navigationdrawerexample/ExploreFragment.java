@@ -32,8 +32,8 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
 
     public void setLocation(StreetViewLocationRecord loc) {
         Log.v(MainActivity.LOG, "setLocation()");
-        LatLng loc_ = new LatLng(loc.getLatitude(), loc.getLongitude());
-        streetViewPanorama.setPosition(loc_);
+
+        streetViewPanorama.setPosition(loc.getPosition());
         streetViewPanorama.animateTo(
                 new StreetViewPanoramaCamera.Builder()
                         .tilt((float) loc.getTilt())

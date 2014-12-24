@@ -20,6 +20,7 @@
         <item>Explore</item>
         <item>Favorites</item>
         <item>Popular</item>
+        <item>Cluster</item>
     </string-array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

@@ -150,6 +150,8 @@ public class MainActivity extends Activity {
             //displayMenuItem(R.id.action_favoriteLocation, true);
         } else if (position == 1) {
             fragment = new FavoritedLocsFragment();
+        } else if (position == 3) {
+            fragment = new ClusterFragment();
         } else {
             //displayMenuItem(R.id.action_favoriteLocation, false);
             fragment = new DummyFragment();

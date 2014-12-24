@@ -1,8 +1,10 @@
 package com.example.android.navigationdrawerexample;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
 import com.orm.SugarRecord;
 
-public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationRecord> {
+public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationRecord> implements ClusterItem{
 
     private double tilt;
     private double bearing;
@@ -10,6 +12,11 @@ public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationReco
     private double longitude;
 
     public StreetViewLocationRecord() {}
+
+    public StreetViewLocationRecord(double lat, double log) {
+        this.latitude = lat;
+        this.longitude = log;
+    }
 
     public double getLatitude() {
         return latitude;
@@ -45,5 +52,10 @@ public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationReco
     public StreetViewLocationRecord setBearing(double bearing) {
         this.bearing = bearing;
         return this;
+    }
+
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(getLatitude(), getLongitude());
     }
 }

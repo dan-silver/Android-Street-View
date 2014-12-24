@@ -37,6 +37,13 @@
         <dex dex="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/classes-6d422399798ce03151c91fda4d7ba4743183e027.jar" />
     </item>
     <item
+        jar="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/exploded-aar/com.google.maps.android/android-maps-utils/0.3.4/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="cf251baf39f5c5138224b67b4106eb6331abbd13">
+        <dex dex="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/classes-52f72b968de724bfcf01a7919ef92ae78292c3d4.jar" />
+    </item>
+    <item
         jar="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"
