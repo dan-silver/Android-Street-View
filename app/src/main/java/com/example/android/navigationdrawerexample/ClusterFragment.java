@@ -16,7 +16,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.ClusterRenderer;
+
+import java.util.Set;
 
 /**
  * Created by dan-silver on 12/23/14.
@@ -68,6 +72,7 @@ public class ClusterFragment extends Fragment implements OnMapReadyCallback{
         // manager.
         map.setOnCameraChangeListener(mClusterManager);
         map.setOnMarkerClickListener(mClusterManager);
+        mClusterManager.setRenderer();
 
         // Add cluster items (markers) to the cluster manager.
         addItems();
