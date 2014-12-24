@@ -3,6 +3,8 @@ package com.example.android.navigationdrawerexample;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,57 +21,41 @@ import com.google.maps.android.clustering.ClusterManager;
 /**
  * Created by dan-silver on 12/23/14.
  */
-public class ClusterFragment extends Fragment implements OnMapReadyCallback {
+public class ClusterFragment extends Fragment implements OnMapReadyCallback{
 
-
-    private SupportMapFragment fragment;
     private ClusterManager<StreetViewLocationRecord> mClusterManager;
-    private GoogleMap map;
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.cluster, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        FragmentManager fm = getChildFragmentManager();
-        fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
-        if (fragment == null) {
-            fragment = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.map, fragment).commit();
-        }
-    }
-
-
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (map == null) {
-            map = fragment.getMap();
-            map.addMarker(new MarkerOptions().position(new LatLng(0, 0)));
-        }
-    }
+    private static GoogleMap map;
+    private static View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
-        View view = inflater.inflate(R.layout.cluster, container, false);
+        Log.v(MainActivity.LOG, "onCreateView");
+
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null)
+                parent.removeView(view);
+        }
+        try {
+            view = inflater.inflate(R.layout.cluster, container, false);
+        } catch (InflateException e) {
+        /* map is already there, just return view as it is */
+        }
+
+
         if (map == null) {
+            Log.v(MainActivity.LOG, "map was null");
             map = ((MapFragment) getFragmentManager() .findFragmentById(R.id.location_map)).getMap();
+            setUpCluster();
         }
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.location_map);
-        mapFragment.getMapAsync(this);
-
+//        MapFragment mapFragment = (MapFragment) getFragmentManager()
+//                .findFragmentById(R.id.location_map);
+//        mapFragment.getMapAsync(this);
         return view;
     }
     private void setUpCluster() {
-
+        Log.v(MainActivity.LOG, "setUpCluster");
 
         // Position the map.
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
@@ -105,7 +91,7 @@ public class ClusterFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.v(MainActivity.LOG, "onMapReady");
         setUpCluster();
-        map = googleMap;
     }
 }
