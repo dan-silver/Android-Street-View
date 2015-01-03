@@ -21,6 +21,7 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
+import com.orm.query.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +31,8 @@ import java.util.Random;
  * Created by dan-silver on 12/23/14.
  */
 
-public class ClusterFragment extends Fragment implements ClusterManager.OnClusterClickListener<ClusterFragment.Person>, ClusterManager.OnClusterInfoWindowClickListener<ClusterFragment.Person>, ClusterManager.OnClusterItemClickListener<ClusterFragment.Person>, ClusterManager.OnClusterItemInfoWindowClickListener<ClusterFragment.Person> {
-    private ClusterManager<Person> mClusterManager;
+public class ClusterFragment extends Fragment implements ClusterManager.OnClusterClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterInfoWindowClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterItemClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterItemInfoWindowClickListener<StreetViewLocationRecord> {
+    private ClusterManager<StreetViewLocationRecord> mClusterManager;
     private Random mRandom = new Random(1984);
     private GoogleMap mMap;
 
@@ -54,7 +55,7 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
      * Draws profile photos inside markers (using IconGenerator).
      * When there are multiple people in the cluster, draw multiple photos (using MultiDrawable).
      */
-    private class PersonRenderer extends DefaultClusterRenderer<Person> {
+    private class PersonRenderer extends DefaultClusterRenderer<StreetViewLocationRecord> {
         private final IconGenerator mIconGenerator = new IconGenerator(getActivity());
         private final IconGenerator mClusterIconGenerator = new IconGenerator(getActivity());
         private final ImageView mImageView;
@@ -77,27 +78,27 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
         }
 
         @Override
-        protected void onBeforeClusterItemRendered(Person person, MarkerOptions markerOptions) {
+        protected void onBeforeClusterItemRendered(StreetViewLocationRecord r, MarkerOptions markerOptions) {
             // Draw a single person.
-            mImageView.setImageResource(person.profilePhoto);
+            mImageView.setImageBitmap(r.getBmp().getBitmap());
             Bitmap icon = mIconGenerator.makeIcon();
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
         }
 
         @Override
-        protected void onBeforeClusterRendered(Cluster<Person> cluster, MarkerOptions markerOptions) {
+        protected void onBeforeClusterRendered(Cluster<StreetViewLocationRecord> cluster, MarkerOptions markerOptions) {
             // Draw multiple people.
             // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
             List<Drawable> profilePhotos = new ArrayList<>(Math.min(4, cluster.getSize()));
             int width = mDimension;
             int height = mDimension;
 
-            for (Person p : cluster.getItems()) {
+            for (StreetViewLocationRecord p : cluster.getItems()) {
                 // Draw 4 at most.
                 if (profilePhotos.size() == 4) break;
-                Drawable drawable = getResources().getDrawable(p.profilePhoto);
-                drawable.setBounds(0, 0, width, height);
-                profilePhotos.add(drawable);
+//                Drawable drawable = getResources().getDrawable();
+//                drawable.setBounds(0, 0, width, height);
+//                profilePhotos.add(drawable);
             }
             MultiDrawable multiDrawable = new MultiDrawable(profilePhotos);
             multiDrawable.setBounds(0, 0, width, height);
@@ -115,23 +116,23 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
     }
 
     @Override
-    public boolean onClusterClick(Cluster<Person> cluster) {
+    public boolean onClusterClick(Cluster<StreetViewLocationRecord> cluster) {
         return true;
     }
 
     @Override
-    public void onClusterInfoWindowClick(Cluster<Person> cluster) {
+    public void onClusterInfoWindowClick(Cluster<StreetViewLocationRecord> cluster) {
         // Does nothing, but you could go to a list of the users.
     }
 
     @Override
-    public boolean onClusterItemClick(Person item) {
+    public boolean onClusterItemClick(StreetViewLocationRecord r) {
         // Does nothing, but you could go into the user's profile page, for example.
         return false;
     }
 
     @Override
-    public void onClusterItemInfoWindowClick(Person item) {
+    public void onClusterItemInfoWindowClick(StreetViewLocationRecord r) {
         // Does nothing, but you could go into the user's profile page, for example.
     }
 
@@ -153,37 +154,6 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
     }
 
     private void addItems() {
-        mClusterManager.addItem(new Person(position(), R.drawable.walter));
-        mClusterManager.addItem(new Person(position(), R.drawable.gran));
-        mClusterManager.addItem(new Person(position(), R.drawable.ruth));
-        mClusterManager.addItem(new Person(position(), R.drawable.stefan));
-        mClusterManager.addItem(new Person(position(), R.drawable.mechanic));
-        mClusterManager.addItem(new Person(position(), R.drawable.yeats));
-        mClusterManager.addItem(new Person(position(), R.drawable.john));
-        mClusterManager.addItem(new Person(position(), R.drawable.turtle));
-        mClusterManager.addItem(new Person(position(), R.drawable.teacher));
-    }
-
-    private LatLng position() {
-        return new LatLng(random(51.6723432, 51.3849401), random(0.148271, -0.3514683));
-    }
-
-    private double random(double min, double max) {
-        return mRandom.nextDouble() * (max - min) + min;
-    }
-
-    public class Person implements ClusterItem {
-        public final int profilePhoto;
-        private final LatLng mPosition;
-
-        public Person(LatLng position, int pictureResource) {
-            profilePhoto = pictureResource;
-            mPosition = position;
-        }
-
-        @Override
-        public LatLng getPosition() {
-            return mPosition;
-        }
+        mClusterManager.addItems(StreetViewLocationRecord.listAll(StreetViewLocationRecord.class));
     }
 }

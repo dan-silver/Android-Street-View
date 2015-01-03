@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orm.query.Select;
 
 /**
@@ -48,12 +49,8 @@ public class FavImageAdapter extends BaseAdapter {
 
         StreetViewLocationRecord loc = Select.from(StreetViewLocationRecord.class).orderBy("id").limit(position + ", 1").list().get(0);
 
-        new AsyncImageFetcher(mContext)
-              .setImageView((ImageView) row.findViewById(R.id.loaded_image))
-              .setLoadingIcon((ProgressBar) row.findViewById(R.id.progress))
-              .execute("https://maps.googleapis.com/maps/api/streetview?size=640x400&location="+loc.getLatitude()+","+loc.getLongitude()+"&fov=90&heading=" +
-                        loc.getBearing() + "&pitch=" + loc.getTilt());
-
+        ImageLoader.getInstance().displayImage("https://maps.googleapis.com/maps/api/streetview?size=640x400&location="+loc.getLatitude()+","+loc.getLongitude()+"&fov=90&heading=" +
+                loc.getBearing() + "&pitch=" + loc.getTilt(), (ImageView) row.findViewById(R.id.loaded_image));
         return row;
     }
 }

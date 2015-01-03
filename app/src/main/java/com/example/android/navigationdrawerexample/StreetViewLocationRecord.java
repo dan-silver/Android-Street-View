@@ -1,5 +1,7 @@
 package com.example.android.navigationdrawerexample;
 
+import android.graphics.drawable.BitmapDrawable;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 import com.orm.SugarRecord;
@@ -12,11 +14,6 @@ public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationReco
     private double longitude;
 
     public StreetViewLocationRecord() {}
-
-    public StreetViewLocationRecord(double lat, double log) {
-        this.latitude = lat;
-        this.longitude = log;
-    }
 
     public double getLatitude() {
         return latitude;
@@ -57,5 +54,9 @@ public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationReco
     @Override
     public LatLng getPosition() {
         return new LatLng(getLatitude(), getLongitude());
+    }
+
+    public BitmapDrawable getBmp() {
+        return null;
     }
 }
