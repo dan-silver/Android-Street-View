@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 import com.orm.SugarRecord;
 
-public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationRecord> implements ClusterItem{
+public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationRecord> implements ClusterItem {
 
     private double tilt;
     private double bearing;
