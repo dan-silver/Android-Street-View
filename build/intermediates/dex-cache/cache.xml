@@ -2,53 +2,53 @@
 <items version="2" >
 
     <item
-        jar="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jar="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
-        <dex dex="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-80834b1053da28f5caa886e028a1a3d1124387e3.jar" />
+        <dex dex="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-7176bc90067c6d38bcdc96517f2c058a94bf7b50.jar" />
     </item>
     <item
-        jar="/home/dan-silver/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
-        <dex dex="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-a97bf1db9dece982aa53549460ddb3f8fbb43eae.jar" />
-    </item>
-    <item
-        jar="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/classes.jar"
+        jar="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="dd9247ea0fabe8ee479638c4b4a23e93752be256">
-        <dex dex="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/classes-6dcb3fee7b3099595c30799282abbae76db7d94d.jar" />
+        <dex dex="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/pre-dexed/debug/classes-36aab5188ab19ddb4998477158de8944d0d2166f.jar" />
     </item>
     <item
-        jar="/home/dan-silver/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.0.1/7ffdb02f95af1c1a208544e076cea5b8e66e731a/commons-io-2.0.1.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="7ffdb02f95af1c1a208544e076cea5b8e66e731a">
-        <dex dex="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/commons-io-2.0.1-072ceb2c47b5a5e9d35fd95f627e26d360d6cef5.jar" />
-    </item>
-    <item
-        jar="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/exploded-aar/com.github.satyan/sugar/1.3/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="07e07903922250dabf50c7d131d6fa069a050305">
-        <dex dex="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/classes-6d422399798ce03151c91fda4d7ba4743183e027.jar" />
-    </item>
-    <item
-        jar="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/exploded-aar/com.google.maps.android/android-maps-utils/0.3.4/classes.jar"
+        jar="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/exploded-aar/com.google.maps.android/android-maps-utils/0.3.4/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="cf251baf39f5c5138224b67b4106eb6331abbd13">
-        <dex dex="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/classes-52f72b968de724bfcf01a7919ef92ae78292c3d4.jar" />
+        <dex dex="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/pre-dexed/debug/classes-9be02552369c04b5ad30619a66bf0ccafb9c748c.jar" />
     </item>
     <item
-        jar="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jar="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
-        <dex dex="/home/dan-silver/AndroidStudioProjects/NavigationDrawer1/app/build/intermediates/pre-dexed/debug/classes-c7c9b8d69dc86bfdf26ac576ece32c64bf501778.jar" />
+        <dex dex="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/pre-dexed/debug/classes-edf1776e9d11acf0c7d5fae3fd33b439226e3895.jar" />
+    </item>
+    <item
+        jar="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/exploded-aar/com.github.satyan/sugar/1.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="07e07903922250dabf50c7d131d6fa069a050305">
+        <dex dex="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/pre-dexed/debug/classes-afdad1a2bf945216433f4a7725e0a19308cddf3a.jar" />
+    </item>
+    <item
+        jar="/home/dan/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-c83cbbbc600a955c2cad88063198acbb98087a50.jar" />
+    </item>
+    <item
+        jar="/home/dan/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.0.1/7ffdb02f95af1c1a208544e076cea5b8e66e731a/commons-io-2.0.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="7ffdb02f95af1c1a208544e076cea5b8e66e731a">
+        <dex dex="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/pre-dexed/debug/commons-io-2.0.1-82a7436cadd132f1d814bce5dbe00a30f06f45e6.jar" />
     </item>
 
 </items>

@@ -1,7 +1,6 @@
 package com.example.android.navigationdrawerexample;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.InflateException;
@@ -13,18 +12,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.view.ClusterRenderer;
-
-import java.util.Set;
 
 /**
  * Created by dan-silver on 12/23/14.
  */
+
 public class ClusterFragment extends Fragment implements OnMapReadyCallback{
 
     private ClusterManager<StreetViewLocationRecord> mClusterManager;
@@ -47,17 +41,14 @@ public class ClusterFragment extends Fragment implements OnMapReadyCallback{
         /* map is already there, just return view as it is */
         }
 
-
         if (map == null) {
             Log.v(MainActivity.LOG, "map was null");
             map = ((MapFragment) getFragmentManager() .findFragmentById(R.id.location_map)).getMap();
             setUpCluster();
         }
-//        MapFragment mapFragment = (MapFragment) getFragmentManager()
-//                .findFragmentById(R.id.location_map);
-//        mapFragment.getMapAsync(this);
         return view;
     }
+
     private void setUpCluster() {
         Log.v(MainActivity.LOG, "setUpCluster");
 
@@ -72,7 +63,7 @@ public class ClusterFragment extends Fragment implements OnMapReadyCallback{
         // manager.
         map.setOnCameraChangeListener(mClusterManager);
         map.setOnMarkerClickListener(mClusterManager);
-        mClusterManager.setRenderer();
+//        mClusterManager.setRenderer();
 
         // Add cluster items (markers) to the cluster manager.
         addItems();
@@ -87,8 +78,8 @@ public class ClusterFragment extends Fragment implements OnMapReadyCallback{
         // Add ten cluster items in close proximity, for purposes of this example.
         for (int i = 0; i < 10; i++) {
             double offset = i / 60d;
-            lat = lat + offset;
-            lng = lng + offset;
+            lat += offset;
+            lng += offset;
             StreetViewLocationRecord offsetItem = new StreetViewLocationRecord(lat, lng);
             mClusterManager.addItem(offsetItem);
         }
