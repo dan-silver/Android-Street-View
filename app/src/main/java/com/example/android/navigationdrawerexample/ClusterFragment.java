@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -32,11 +34,10 @@ import java.util.List;
  * Created by dan-silver on 12/23/14.
  */
 
-public class ClusterFragment extends Fragment implements ClusterManager.OnClusterClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterInfoWindowClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterItemClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterItemInfoWindowClickListener<StreetViewLocationRecord> {
+public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClickListener, ClusterManager.OnClusterClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterInfoWindowClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterItemClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterItemInfoWindowClickListener<StreetViewLocationRecord> {
     private ClusterManager<StreetViewLocationRecord> mClusterManager;
     private GoogleMap mMap;
     private static View view;
-    final LatLngBounds.Builder builder = LatLngBounds.builder();
     Activity activity;
 
     private void setUpMapIfNeeded() {
@@ -44,8 +45,30 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
             return;
 
         mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.location_map)).getMap();
-        if (mMap != null)
+        if (mMap != null) {
             startDemo();
+        }
+    }
+
+    private void addNewItems() {
+        Log.v(MainActivity.LOG, "Adding new items");
+        for (long id : ((MainActivity) activity).newLocationIds) {
+            final StreetViewLocationRecord loc = StreetViewLocationRecord.findById(StreetViewLocationRecord.class, id);
+            Log.v(MainActivity.LOG, "FOUND id: " + id + "in the arraylist!");
+            MainActivity.il.loadImage(loc.getURL(), new SimpleImageLoadingListener() {
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    loc.setImage(loadedImage);
+                    addItem(loc);
+                }
+            });
+        }
+        ((MainActivity) activity).newLocationIds.clear();
+    }
+
+    private void addItem(StreetViewLocationRecord r) {
+        mClusterManager.addItem(r);
+        mClusterManager.cluster();
     }
 
     @Override
@@ -62,9 +85,16 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
         } catch (InflateException e) {
         /* map is already there, just return view as it is */
         }
-
+        addNewItems();
         return view;
     }
+
+    @Override
+    public void onMapLongClick(LatLng point) {
+        if (activity instanceof MainActivity)
+            ((MainActivity) activity).switchToExploreWithPoint(point);
+    }
+
     /**
      * Draws profile photos inside markers (using IconGenerator).
      * When there are multiple people in the cluster, draw multiple photos (using MultiDrawable).
@@ -135,7 +165,7 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
         LatLngBounds.Builder cluster_bounds_builder = LatLngBounds.builder();
         for (StreetViewLocationRecord r : cluster.getItems())
             cluster_bounds_builder.include(r.getPosition());
-        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(cluster_bounds_builder.build(), 500));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(cluster_bounds_builder.build(), 300));
         return true;
     }
 
@@ -160,16 +190,42 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
 
         mClusterManager = new ClusterManager<>(getActivity(), mMap);
         mClusterManager.setRenderer(new PersonRenderer());
-        mMap.setOnCameraChangeListener(mClusterManager);
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+            LatLngBounds.Builder builder = LatLngBounds.builder();
+                for (final StreetViewLocationRecord r : StreetViewLocationRecord.listAll(StreetViewLocationRecord.class)) {
+                    builder.include(r.getPosition());
+                }
+                // Move camera.
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+                // Remove listener to prevent position reset on camera move.
+                mMap.setOnCameraChangeListener(mClusterManager);
+            }
+        });
         mMap.setOnMarkerClickListener(mClusterManager);
         mMap.setOnInfoWindowClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);
         mClusterManager.setOnClusterInfoWindowClickListener(this);
         mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
-
-        addItems();
+        mMap.setOnMapLongClickListener(this);
+//        mMap.setOnCameraChangeListener(this);
+//        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+//            LatLngBounds.Builder builder = LatLngBounds.builder();
+//            @Override
+//            public void onCameraChange(CameraPosition arg0) {
+//                for (final StreetViewLocationRecord r : StreetViewLocationRecord.listAll(StreetViewLocationRecord.class)) {
+//                    builder.include(r.getPosition());
+//                }
+//                // Move camera.
+//                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 10));
+//                // Remove listener to prevent position reset on camera move.
+//                mMap.setOnCameraChangeListener(null);
+//            }
+//        });
         mClusterManager.cluster();
+        addItems();
     }
 
     private void addItems() {
@@ -180,8 +236,7 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                     r.setImage(loadedImage);
                     mClusterManager.addItem(r);
-                    builder.include(r.getPosition());
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 225));
+                    mClusterManager.cluster();
                 }
             });
         }

@@ -35,8 +35,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     public static final String LOG = "SILVER_LOG";
@@ -50,6 +53,7 @@ public class MainActivity extends Activity {
     private Menu actionBar;
     int previousSelection = -1;
     static public ImageLoader il;
+    public ArrayList<Long> newLocationIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,8 @@ public class MainActivity extends Activity {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
         il = ImageLoader.getInstance();
         il.init(config);
+
+        newLocationIds = new ArrayList<>();
 
         setContentView(R.layout.activity_main);
 
@@ -100,7 +106,7 @@ public class MainActivity extends Activity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (savedInstanceState == null) {
-            selectItem(0, null);
+            selectItem(3, null);
         }
     }
 
@@ -139,6 +145,13 @@ public class MainActivity extends Activity {
     public void switchToExploreWithSaved(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("POSITION", position);
+        selectItem(0, bundle);
+    }
+
+    public void switchToExploreWithPoint(LatLng point) {
+        Bundle bundle = new Bundle();
+        bundle.putDouble("MANUAL_LAT", point.latitude);
+        bundle.putDouble("MANUAL_LONG", point.longitude);
         selectItem(0, bundle);
     }
 

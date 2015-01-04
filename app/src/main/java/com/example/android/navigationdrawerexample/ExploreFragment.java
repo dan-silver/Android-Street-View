@@ -1,5 +1,6 @@
 package com.example.android.navigationdrawerexample;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +25,7 @@ import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
 public class ExploreFragment extends Fragment implements OnStreetViewPanoramaReadyCallback {
     private static StreetViewPanorama streetViewPanorama;
     private static View view;
-    private Boolean useSavedLoc;
+    Activity activity;
 
     public ExploreFragment() {
 
@@ -33,7 +34,7 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
     public void setLocation(StreetViewLocationRecord loc) {
         Log.v(MainActivity.LOG, "setLocation()");
 
-        streetViewPanorama.setPosition(loc.getPosition());
+        setLocationWithoutTilt(loc.getPosition());
         streetViewPanorama.animateTo(
                 new StreetViewPanoramaCamera.Builder()
                         .tilt((float) loc.getTilt())
@@ -42,11 +43,16 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
                 1);
     }
 
+    public void setLocationWithoutTilt(LatLng loc) {
+        Log.v(MainActivity.LOG, "setLocationWithoutTilt()");
+        streetViewPanorama.setPosition(loc);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favoriteLocation:
-                getLocation();
+                saveCurrentLocation();
                 return true;
             case R.id.action_random:
                 setLocation(PresetLocations.getRandomLocation());
@@ -66,8 +72,8 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        activity = getActivity();
         Log.v(MainActivity.LOG, "onCreateView()");
-        useSavedLoc = false;
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null)
@@ -84,46 +90,56 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
         } catch (InflateException e) {
             Log.v(MainActivity.LOG, "onCreateView() caught error => map already there");
             /* map is already there, just return view as it is */
-        }
-
-        Bundle args = getArguments();
-        if (args != null && args.containsKey("POSITION")) {
-            Log.v(MainActivity.LOG, "args contained key position");
-            useSavedLoc = true;
-            int position = args.getInt("POSITION");
-            StreetViewLocationRecord savedLocation = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class).get(position);
-            setLocation(savedLocation);
-
-        } else if (args != null && args.containsKey("RECORD_ID")) {
-            Log.v(MainActivity.LOG, "args contained RECORD_ID");
-            useSavedLoc = true;
-            long id = args.getLong("RECORD_ID");
-            StreetViewLocationRecord savedLocation = StreetViewLocationRecord.findById(StreetViewLocationRecord.class, id);
-            setLocation(savedLocation);
+            setupMapLocation();
         }
         return view;
     }
 
-    public void getLocation() {
-        Log.v(MainActivity.LOG, "getLocation()");
+    public void saveCurrentLocation() {
+        Log.v(MainActivity.LOG, "saveCurrentLocation()");
         LatLng location = streetViewPanorama.getLocation().position;
         StreetViewPanoramaCamera camera = streetViewPanorama.getPanoramaCamera();
 
-
-        (new StreetViewLocationRecord()).setLatitude(location.latitude)
+        StreetViewLocationRecord r = new StreetViewLocationRecord();
+                                 r.setLatitude(location.latitude)
                                   .setLongitude(location.longitude)
                                   .setTilt(camera.tilt)
                                   .setBearing(camera.bearing)
                                   .save();
         Toast.makeText(getActivity().getApplicationContext(), "Saved!", Toast.LENGTH_SHORT).show();
+        if (activity instanceof MainActivity) {
+            ((MainActivity) activity).newLocationIds.add(r.getId());
+            Log.v(MainActivity.LOG, "added id: " + r.getId() + "to the arraylist!");
+        }
     }
 
     @Override
     public void onStreetViewPanoramaReady(StreetViewPanorama panorama) {
         Log.v(MainActivity.LOG, "onStreetViewPanoramaReady()");
         streetViewPanorama = panorama;
-        if (!useSavedLoc) {
-            setLocation(PresetLocations.getRandomLocation());
+        setupMapLocation();
+    }
+
+    private void setupMapLocation() {
+        Bundle args = getArguments();
+        if (args != null) {
+            if (args.containsKey("POSITION")) {
+                Log.v(MainActivity.LOG, "args contained key position");
+                int position = args.getInt("POSITION");
+                StreetViewLocationRecord savedLocation = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class).get(position);
+                setLocation(savedLocation);
+
+            } else if (args.containsKey("RECORD_ID")) {
+                Log.v(MainActivity.LOG, "args contained RECORD_ID");
+                long id = args.getLong("RECORD_ID");
+                StreetViewLocationRecord savedLocation = StreetViewLocationRecord.findById(StreetViewLocationRecord.class, id);
+                setLocation(savedLocation);
+            } else if (args.containsKey("MANUAL_LAT")) {
+                Log.v(MainActivity.LOG, "args contained MANUAL_LAT");
+                double lat = args.getDouble("MANUAL_LAT");
+                double lng = args.getDouble("MANUAL_LONG");
+                setLocationWithoutTilt(new LatLng(lat, lng));
+            }
         }
     }
 
@@ -132,5 +148,4 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
         Log.v(MainActivity.LOG, "onStop()");
         super.onStop();
     }
-
 }
