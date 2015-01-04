@@ -92,7 +92,6 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
             useSavedLoc = true;
             int position = args.getInt("POSITION");
             StreetViewLocationRecord savedLocation = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class).get(position);
-            Toast.makeText(getActivity().getApplicationContext(), "in Explore: " + position, Toast.LENGTH_SHORT).show();
             setLocation(savedLocation);
 
         } else if (args != null && args.containsKey("RECORD_ID")) {

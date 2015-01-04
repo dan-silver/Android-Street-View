@@ -1,17 +1,16 @@
 package com.example.android.navigationdrawerexample;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,17 +20,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-import com.orm.query.Select;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by dan-silver on 12/23/14.
@@ -42,6 +37,7 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
     private GoogleMap mMap;
     private static View view;
     final LatLngBounds.Builder builder = LatLngBounds.builder();
+    Activity activity;
 
     private void setUpMapIfNeeded() {
         if (mMap != null)
@@ -54,6 +50,7 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        activity = getActivity();
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null)
@@ -114,7 +111,7 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
                 // Draw 4 at most.
                 if (profilePhotos.size() == 4) break;
                 Bitmap bmp = p.getImage();
-                Drawable drawable = new BitmapDrawable(getResources(), bmp);
+                Drawable drawable = new BitmapDrawable(null, bmp);
                 drawable.setBounds(0, 0, mDimensionWidth, mDimensionHeight);
                 profilePhotos.add(drawable);
             }
@@ -135,7 +132,6 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
 
     @Override
     public boolean onClusterClick(Cluster<StreetViewLocationRecord> cluster) {
-        Log.v(MainActivity.LOG, "Info click");
         LatLngBounds.Builder cluster_bounds_builder = LatLngBounds.builder();
         for (StreetViewLocationRecord r : cluster.getItems())
             cluster_bounds_builder.include(r.getPosition());
@@ -149,7 +145,8 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
 
     @Override
     public boolean onClusterItemClick(StreetViewLocationRecord r) {
-        ((MainActivity) getActivity()).switchToExploreWithRecord(r);
+        if (activity instanceof MainActivity)
+            ((MainActivity) activity).switchToExploreWithRecord(r);
         return false;
     }
 
@@ -188,7 +185,5 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
                 }
             });
         }
-
-
     }
 }
