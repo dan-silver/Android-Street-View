@@ -19,21 +19,7 @@ package com.example.android.navigationdrawerexample;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.content.res.Configuration;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -56,6 +42,7 @@ public class MainActivity extends Activity {
         il = ImageLoader.getInstance();
         il.init(config);
 
+        //new favorites that were just added to the db & haven't been rendered
         newLocationIds = new ArrayList<>();
 
         setContentView(R.layout.activity_main);
@@ -64,33 +51,31 @@ public class MainActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
 
-
         if (savedInstanceState == null) {
-            selectItem(3, null);
+            switchFragment(3, null);
         }
     }
 
     public void switchToExploreWithRecord(StreetViewLocationRecord r) {
         Bundle bundle = new Bundle();
         bundle.putLong("RECORD_ID", r.getId());
-        selectItem(0, bundle);
+        switchFragment(0, bundle);
     }
-
 
     public void switchToExploreWithSaved(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("POSITION", position);
-        selectItem(0, bundle);
+        switchFragment(0, bundle);
     }
 
     public void switchToExploreWithPoint(LatLng point) {
         Bundle bundle = new Bundle();
         bundle.putDouble("MANUAL_LAT", point.latitude);
         bundle.putDouble("MANUAL_LONG", point.longitude);
-        selectItem(0, bundle);
+        switchFragment(0, bundle);
     }
 
-    public void selectItem(int position, Bundle bundle) {
+    public void switchFragment(int position, Bundle bundle) {
         //convert position into fragment
         Fragment fragment;
         if (position == 0) {
@@ -98,11 +83,8 @@ public class MainActivity extends Activity {
             //displayMenuItem(R.id.action_favoriteLocation, true);
         } else if (position == 1) {
             fragment = new FavoritedLocsFragment();
-        } else if (position == 3) {
+        } else {//if (position == 3) {
             fragment = new ClusterFragment();
-        } else {
-            //displayMenuItem(R.id.action_favoriteLocation, false);
-            fragment = new DummyFragment();
         }
         if (bundle != null) {
             fragment.setArguments(bundle);
