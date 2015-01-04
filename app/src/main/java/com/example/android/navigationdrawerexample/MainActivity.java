@@ -129,6 +129,13 @@ public class MainActivity extends Activity {
         }
     }
 
+    public void switchToExploreWithRecord(StreetViewLocationRecord r) {
+        Bundle bundle = new Bundle();
+        bundle.putLong("RECORD_ID", r.getId());
+        selectItem(0, bundle);
+    }
+
+
     public void switchToExploreWithSaved(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("POSITION", position);

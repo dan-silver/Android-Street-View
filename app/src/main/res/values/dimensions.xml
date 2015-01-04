@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="custom_profile_image">150dp</dimen>
-    <dimen name="custom_profile_padding">1dp</dimen>
+    <dimen name="cluster_image_width">200dp</dimen>
+    <dimen name="cluster_image_height">150dp</dimen>
+    <dimen name="cluster_text_padding">3dp</dimen>
 </resources>

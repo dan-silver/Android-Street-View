@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
@@ -37,6 +40,8 @@ import java.util.Random;
 public class ClusterFragment extends Fragment implements ClusterManager.OnClusterClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterInfoWindowClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterItemClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterItemInfoWindowClickListener<StreetViewLocationRecord> {
     private ClusterManager<StreetViewLocationRecord> mClusterManager;
     private GoogleMap mMap;
+    private static View view;
+    final LatLngBounds.Builder builder = LatLngBounds.builder();
 
     private void setUpMapIfNeeded() {
         if (mMap != null)
@@ -49,9 +54,19 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.cluster, container, false);
-        setUpMapIfNeeded();
-        return v;
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null)
+                parent.removeView(view);
+        }
+        try {
+            view = inflater.inflate(R.layout.cluster, container, false);
+            setUpMapIfNeeded();
+        } catch (InflateException e) {
+        /* map is already there, just return view as it is */
+        }
+
+        return view;
     }
     /**
      * Draws profile photos inside markers (using IconGenerator).
@@ -62,7 +77,8 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
         private final IconGenerator mClusterIconGenerator = new IconGenerator(getActivity());
         private final ImageView mImageView;
         private final ImageView mClusterImageView;
-        private final int mDimension;
+        private final int mDimensionWidth;
+        private final int mDimensionHeight;
 
         public PersonRenderer() {
             super(getActivity(), mMap, mClusterManager);
@@ -72,10 +88,10 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
             mClusterImageView = (ImageView) multiProfile.findViewById(R.id.image);
 
             mImageView = new ImageView(getActivity());
-            mDimension = (int) getResources().getDimension(R.dimen.custom_profile_image);
-            mImageView.setLayoutParams(new ViewGroup.LayoutParams(mDimension, mDimension));
-            int padding = (int) getResources().getDimension(R.dimen.custom_profile_padding);
-            mImageView.setPadding(padding, padding, padding, padding);
+            mDimensionWidth = (int) getResources().getDimension(R.dimen.cluster_image_width);
+            mDimensionHeight = (int) getResources().getDimension(R.dimen.cluster_image_height);
+
+            mImageView.setLayoutParams(new ViewGroup.LayoutParams(mDimensionWidth, mDimensionHeight));
             mIconGenerator.setContentView(mImageView);
         }
 
@@ -93,19 +109,17 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
             // Draw multiple people.
             // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
             List<Drawable> profilePhotos = new ArrayList<>(Math.min(4, cluster.getSize()));
-            int width = mDimension;
-            int height = mDimension;
 
             for (StreetViewLocationRecord p : cluster.getItems()) {
                 // Draw 4 at most.
                 if (profilePhotos.size() == 4) break;
                 Bitmap bmp = p.getImage();
                 Drawable drawable = new BitmapDrawable(getResources(), bmp);
-                drawable.setBounds(0, 0, width, height);
+                drawable.setBounds(0, 0, mDimensionWidth, mDimensionHeight);
                 profilePhotos.add(drawable);
             }
             MultiDrawable multiDrawable = new MultiDrawable(profilePhotos);
-            multiDrawable.setBounds(0, 0, width, height);
+            multiDrawable.setBounds(0, 0, mDimensionWidth, mDimensionHeight);
 
             mClusterImageView.setImageDrawable(multiDrawable);
             Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
@@ -121,17 +135,21 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
 
     @Override
     public boolean onClusterClick(Cluster<StreetViewLocationRecord> cluster) {
+        Log.v(MainActivity.LOG, "Info click");
+        LatLngBounds.Builder cluster_bounds_builder = LatLngBounds.builder();
+        for (StreetViewLocationRecord r : cluster.getItems())
+            cluster_bounds_builder.include(r.getPosition());
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(cluster_bounds_builder.build(), 500));
         return true;
     }
 
     @Override
     public void onClusterInfoWindowClick(Cluster<StreetViewLocationRecord> cluster) {
-        // Does nothing, but you could go to a list of the users.
     }
 
     @Override
     public boolean onClusterItemClick(StreetViewLocationRecord r) {
-        // Does nothing, but you could go into the user's profile page, for example.
+        ((MainActivity) getActivity()).switchToExploreWithRecord(r);
         return false;
     }
 
@@ -141,7 +159,7 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
     }
 
     protected void startDemo() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 9.5f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 3));
 
         mClusterManager = new ClusterManager<>(getActivity(), mMap);
         mClusterManager.setRenderer(new PersonRenderer());
@@ -165,9 +183,12 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                     r.setImage(loadedImage);
                     mClusterManager.addItem(r);
+                    builder.include(r.getPosition());
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 225));
                 }
             });
         }
+
 
     }
 }
