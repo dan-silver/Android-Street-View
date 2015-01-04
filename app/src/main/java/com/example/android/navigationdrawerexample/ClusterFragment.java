@@ -210,20 +210,6 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
         mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
         mMap.setOnMapLongClickListener(this);
-//        mMap.setOnCameraChangeListener(this);
-//        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-//            LatLngBounds.Builder builder = LatLngBounds.builder();
-//            @Override
-//            public void onCameraChange(CameraPosition arg0) {
-//                for (final StreetViewLocationRecord r : StreetViewLocationRecord.listAll(StreetViewLocationRecord.class)) {
-//                    builder.include(r.getPosition());
-//                }
-//                // Move camera.
-//                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 10));
-//                // Remove listener to prevent position reset on camera move.
-//                mMap.setOnCameraChangeListener(null);
-//            }
-//        });
         mClusterManager.cluster();
         addItems();
     }
