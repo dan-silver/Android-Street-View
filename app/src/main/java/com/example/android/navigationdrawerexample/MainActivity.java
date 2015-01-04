@@ -49,6 +49,7 @@ public class MainActivity extends Activity {
     private String[] drawerItemNames;
     private Menu actionBar;
     int previousSelection = -1;
+    static public ImageLoader il;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,8 @@ public class MainActivity extends Activity {
 
         // Create global configuration and initialize ImageLoader with this config
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
-        ImageLoader.getInstance().init(config);
+        il = ImageLoader.getInstance();
+        il.init(config);
 
         setContentView(R.layout.activity_main);
 

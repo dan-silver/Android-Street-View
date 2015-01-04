@@ -23,6 +23,13 @@
         <dex dex="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/pre-dexed/debug/classes-9be02552369c04b5ad30619a66bf0ccafb9c748c.jar" />
     </item>
     <item
+        jar="/home/dan/.gradle/caches/modules-2/files-2.1/com.nostra13.universalimageloader/universal-image-loader/1.9.3/a85588bec3e2c4584d593d3f15df1677321bca72/universal-image-loader-1.9.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a85588bec3e2c4584d593d3f15df1677321bca72">
+        <dex dex="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/pre-dexed/debug/universal-image-loader-1.9.3-cf09d7dfc469ac8ea9b2d1d402fc028a40b7bd93.jar" />
+    </item>
+    <item
         jar="/home/dan/projects/Android-Maps-Street-View-Test/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"

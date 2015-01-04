@@ -2,6 +2,7 @@ package com.example.android.navigationdrawerexample;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,6 +22,8 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.orm.query.Select;
 
 import java.util.ArrayList;
@@ -33,7 +36,6 @@ import java.util.Random;
 
 public class ClusterFragment extends Fragment implements ClusterManager.OnClusterClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterInfoWindowClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterItemClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterItemInfoWindowClickListener<StreetViewLocationRecord> {
     private ClusterManager<StreetViewLocationRecord> mClusterManager;
-    private Random mRandom = new Random(1984);
     private GoogleMap mMap;
 
     private void setUpMapIfNeeded() {
@@ -79,8 +81,9 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
 
         @Override
         protected void onBeforeClusterItemRendered(StreetViewLocationRecord r, MarkerOptions markerOptions) {
-            // Draw a single person.
-            mImageView.setImageBitmap(r.getBmp().getBitmap());
+            // Draw a single record
+            // Load image, decode it to Bitmap and return Bitmap to callback
+            mImageView.setImageBitmap(r.getImage());
             Bitmap icon = mIconGenerator.makeIcon();
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
         }
@@ -96,9 +99,10 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
             for (StreetViewLocationRecord p : cluster.getItems()) {
                 // Draw 4 at most.
                 if (profilePhotos.size() == 4) break;
-//                Drawable drawable = getResources().getDrawable();
-//                drawable.setBounds(0, 0, width, height);
-//                profilePhotos.add(drawable);
+                Bitmap bmp = p.getImage();
+                Drawable drawable = new BitmapDrawable(getResources(), bmp);
+                drawable.setBounds(0, 0, width, height);
+                profilePhotos.add(drawable);
             }
             MultiDrawable multiDrawable = new MultiDrawable(profilePhotos);
             multiDrawable.setBounds(0, 0, width, height);
@@ -154,6 +158,16 @@ public class ClusterFragment extends Fragment implements ClusterManager.OnCluste
     }
 
     private void addItems() {
-        mClusterManager.addItems(StreetViewLocationRecord.listAll(StreetViewLocationRecord.class));
+        for (final StreetViewLocationRecord r : StreetViewLocationRecord.listAll(StreetViewLocationRecord.class)) {
+            //download & cache the image, then add it
+            MainActivity.il.loadImage(r.getURL(), new SimpleImageLoadingListener() {
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    r.setImage(loadedImage);
+                    mClusterManager.addItem(r);
+                }
+            });
+        }
+
     }
 }
