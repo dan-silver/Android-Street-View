@@ -45,6 +45,7 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
             return;
 
         mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.location_map)).getMap();
+        mMap.getUiSettings().setZoomControlsEnabled(true);
         if (mMap != null) {
             startDemo();
         }
