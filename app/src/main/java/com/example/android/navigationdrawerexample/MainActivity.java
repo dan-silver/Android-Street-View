@@ -18,13 +18,9 @@ package com.example.android.navigationdrawerexample;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -38,9 +34,9 @@ public class MainActivity extends Activity {
     static public ImageLoader il;
     public ArrayList<Long> newLocationIds;
 
+    public static String STREET_VIEW_IMAGE_API_KEY;
     private final static String TAG_CLUSTER_MAP = "TAG_CLUSTER_MAP";
 
-    public static String STREET_VIEW_IMAGE_API_KEY;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

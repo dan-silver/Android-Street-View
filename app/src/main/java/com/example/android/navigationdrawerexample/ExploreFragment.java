@@ -25,7 +25,7 @@ import com.google.android.gms.maps.model.StreetViewPanoramaCamera;
 public class ExploreFragment extends Fragment implements OnStreetViewPanoramaReadyCallback {
     private static StreetViewPanorama streetViewPanorama;
     private static View view;
-    Activity activity;
+    MainActivity activity;
 
     public ExploreFragment() {
 
@@ -76,7 +76,7 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         getActivity().getActionBar().setHomeButtonEnabled(true);
 
-        activity = getActivity();
+        activity = (MainActivity) getActivity();
         Log.v(MainActivity.LOG, "onCreateView()");
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
@@ -111,10 +111,8 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
                                   .setBearing(camera.bearing)
                                   .save();
         Toast.makeText(getActivity().getApplicationContext(), "Saved!", Toast.LENGTH_SHORT).show();
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).newLocationIds.add(r.getId());
-            Log.v(MainActivity.LOG, "added id: " + r.getId() + "to the arraylist!");
-        }
+        activity.newLocationIds.add(r.getId());
+        Log.v(MainActivity.LOG, "added id: " + r.getId() + "to the arraylist!");
     }
 
     @Override
@@ -126,30 +124,19 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
 
     private void setupMapLocation() {
         Bundle args = getArguments();
-        if (args != null) {
-            if (args.containsKey("POSITION")) {
-                Log.v(MainActivity.LOG, "args contained key position");
-                int position = args.getInt("POSITION");
-                StreetViewLocationRecord savedLocation = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class).get(position);
-                setLocation(savedLocation);
 
-            } else if (args.containsKey("RECORD_ID")) {
+        if (args == null) return;
+
+        if (args.containsKey("RECORD_ID")) {
                 Log.v(MainActivity.LOG, "args contained RECORD_ID");
                 long id = args.getLong("RECORD_ID");
                 StreetViewLocationRecord savedLocation = StreetViewLocationRecord.findById(StreetViewLocationRecord.class, id);
                 setLocation(savedLocation);
-            } else if (args.containsKey("MANUAL_LAT")) {
-                Log.v(MainActivity.LOG, "args contained MANUAL_LAT");
-                double lat = args.getDouble("MANUAL_LAT");
-                double lng = args.getDouble("MANUAL_LONG");
-                setLocationWithoutTilt(new LatLng(lat, lng));
-            }
+        } else if (args.containsKey("MANUAL_LAT")) {
+            Log.v(MainActivity.LOG, "args contained MANUAL_LAT");
+            double lat = args.getDouble("MANUAL_LAT");
+            double lng = args.getDouble("MANUAL_LONG");
+            setLocationWithoutTilt(new LatLng(lat, lng));
         }
-    }
-
-    @Override
-    public void onStop() {
-        Log.v(MainActivity.LOG, "onStop()");
-        super.onStop();
     }
 }
