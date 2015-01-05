@@ -41,7 +41,7 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
     private ClusterManager<StreetViewLocationRecord> mClusterManager;
     private GoogleMap mMap;
     private static View view;
-    Activity activity;
+    MainActivity activity;
 
     private void setUpMapIfNeeded() {
         if (mMap != null)
@@ -65,7 +65,7 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
 
     private void addNewItems() {
         Log.v(MainActivity.LOG, "Adding new items");
-        for (long id : ((MainActivity) activity).newLocationIds) {
+        for (long id : activity.newLocationIds) {
             final StreetViewLocationRecord loc = StreetViewLocationRecord.findById(StreetViewLocationRecord.class, id);
             Log.v(MainActivity.LOG, "FOUND id: " + id + "in the arraylist!");
             MainActivity.il.loadImage(loc.getURL(), new SimpleImageLoadingListener() {
@@ -76,7 +76,7 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
                 }
             });
         }
-        ((MainActivity) activity).newLocationIds.clear();
+        activity.newLocationIds.clear();
     }
 
     private void addItem(StreetViewLocationRecord r) {
@@ -86,7 +86,7 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        activity = getActivity();
+        activity = (MainActivity) getActivity();
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null)
@@ -105,8 +105,7 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
 
     @Override
     public void onMapLongClick(LatLng point) {
-        if (activity instanceof MainActivity)
-            ((MainActivity) activity).switchToExploreWithPoint(point);
+        activity.switchToExploreWithPoint(point);
     }
 
     /**
@@ -207,8 +206,7 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
 
     @Override
     public boolean onClusterItemClick(StreetViewLocationRecord r) {
-        if (activity instanceof MainActivity)
-            ((MainActivity) activity).switchToExploreWithRecord(r);
+        activity.switchToExploreWithRecord(r);
         return false;
     }
 
