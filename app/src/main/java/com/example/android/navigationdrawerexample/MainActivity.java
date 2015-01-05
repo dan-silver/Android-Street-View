@@ -79,12 +79,6 @@ public class MainActivity extends Activity {
         switchToStreetView(bundle);
     }
 
-    public void switchToExploreWithSaved(int position) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("POSITION", position);
-        switchToStreetView(bundle);
-    }
-
     public void switchToExploreWithPoint(LatLng point) {
         Bundle bundle = new Bundle();
         bundle.putDouble("MANUAL_LAT", point.latitude);
