@@ -23,6 +23,8 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -66,6 +68,7 @@ public class MainActivity extends Activity {
         switch (menuItem.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
         }
         return super.onOptionsItemSelected(menuItem);
     }
@@ -89,7 +92,6 @@ public class MainActivity extends Activity {
         switchToStreetView(bundle);
     }
 
-
     public void switchFragment(int position) {
         //convert position into fragment
         Fragment fragment;
@@ -102,6 +104,7 @@ public class MainActivity extends Activity {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
+
     private void switchToStreetView(Bundle bundle) {
         ExploreFragment fragment = new ExploreFragment();
         fragment.setArguments(bundle);
@@ -110,7 +113,6 @@ public class MainActivity extends Activity {
         ft.addToBackStack(null);
         ft.commit();
     }
-
 
     @Override
     public void onBackPressed() {

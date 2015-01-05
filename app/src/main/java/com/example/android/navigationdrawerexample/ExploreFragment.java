@@ -65,6 +65,7 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
+        menu.removeGroup(R.id.group_cluster);
         super.onCreateOptionsMenu(menu,inflater);
     }
 

@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -96,6 +99,7 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
         /* map is already there, just return view as it is */
         }
         addNewItems();
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -141,6 +145,7 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
         }
 
+
         @Override
         protected void onBeforeClusterRendered(Cluster<StreetViewLocationRecord> cluster, MarkerOptions markerOptions) {
             // Draw multiple people.
@@ -170,6 +175,23 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
         }
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.cluster, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.zoom_out:
+                fitZoom();
+                return true;
+        }
+        return super.onOptionsItemSelected(menuItem);
+    }
+
     @Override
     public boolean onClusterClick(Cluster<StreetViewLocationRecord> cluster) {
         LatLngBounds.Builder cluster_bounds_builder = LatLngBounds.builder();
@@ -195,22 +217,26 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
         // Does nothing, but you could go into the user's profile page, for example.
     }
 
+    private void fitZoom() {
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+        List<StreetViewLocationRecord> locations = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class);
+        for (final StreetViewLocationRecord r : locations) {
+            builder.include(r.getPosition());
+        }
+        // Move camera
+        if (locations.size() > 0)
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 200));
+        else
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 3));
+    }
+
     protected void startDemo() {
         mClusterManager = new ClusterManager<>(getActivity(), mMap);
         mClusterManager.setRenderer(new PersonRenderer());
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-            LatLngBounds.Builder builder = LatLngBounds.builder();
-                List<StreetViewLocationRecord> allLocs = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class);
-                for (final StreetViewLocationRecord r : allLocs) {
-                    builder.include(r.getPosition());
-                }
-                // Move camera
-                if (allLocs.size() > 0)
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
-                else
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 3));
+                fitZoom();
                 // Remove listener to prevent position reset on camera move.
                 mMap.setOnCameraChangeListener(mClusterManager);
             }
