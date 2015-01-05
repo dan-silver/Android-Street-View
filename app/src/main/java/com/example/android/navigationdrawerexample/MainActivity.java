@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            switchToFragment(new ClusterFragment(), null);
+            switchToFragment(new ClusterFragment());
         }
     }
 
@@ -93,11 +93,12 @@ public class MainActivity extends Activity {
     }
 
     private void switchToStreetView(Bundle bundle) {
-        switchToFragment(new ExploreFragment(), bundle);
+        ExploreFragment f = new ExploreFragment();
+        f.setArguments(bundle);
+        switchToFragment(f);
     }
 
-    private void switchToFragment(Fragment fragment, Bundle bundle) {
-        fragment.setArguments(bundle);
+    private void switchToFragment(Fragment fragment) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.add(R.id.content_frame, fragment, TAG_CLUSTER_MAP);
         ft.addToBackStack(null);
