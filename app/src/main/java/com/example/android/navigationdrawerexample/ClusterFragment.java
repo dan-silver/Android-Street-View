@@ -50,6 +50,12 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
         }
     }
 
+    @Override
+    public void onResume() {
+        addNewItems();
+        super.onResume();
+    }
+
     private void addNewItems() {
         Log.v(MainActivity.LOG, "Adding new items");
         for (long id : ((MainActivity) activity).newLocationIds) {
@@ -186,19 +192,21 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
     }
 
     protected void startDemo() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 3));
-
         mClusterManager = new ClusterManager<>(getActivity(), mMap);
         mClusterManager.setRenderer(new PersonRenderer());
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
             LatLngBounds.Builder builder = LatLngBounds.builder();
-                for (final StreetViewLocationRecord r : StreetViewLocationRecord.listAll(StreetViewLocationRecord.class)) {
+                List<StreetViewLocationRecord> allLocs = StreetViewLocationRecord.listAll(StreetViewLocationRecord.class);
+                for (final StreetViewLocationRecord r : allLocs) {
                     builder.include(r.getPosition());
                 }
-                // Move camera.
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+                // Move camera
+                if (allLocs.size() > 0)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+                else
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 3));
                 // Remove listener to prevent position reset on camera move.
                 mMap.setOnCameraChangeListener(mClusterManager);
             }

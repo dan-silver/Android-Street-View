@@ -19,7 +19,9 @@ package com.example.android.navigationdrawerexample;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -33,9 +35,14 @@ public class MainActivity extends Activity {
     static public ImageLoader il;
     public ArrayList<Long> newLocationIds;
 
+    public static String STREET_VIEW_IMAGE_API_KEY;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //load api keys
+        STREET_VIEW_IMAGE_API_KEY = getResources().getString(R.string.streetview_image_api);
 
         // Create global configuration and initialize ImageLoader with this config
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
@@ -79,8 +86,9 @@ public class MainActivity extends Activity {
         //convert position into fragment
         Fragment fragment;
         if (position == 0) {
-            fragment = new ExploreFragment();
-            //displayMenuItem(R.id.action_favoriteLocation, true);
+//            fragment = new ExploreFragment();
+            switchToStreetView();
+            return;
         } else if (position == 1) {
             fragment = new FavoritedLocsFragment();
         } else {//if (position == 3) {
@@ -89,9 +97,36 @@ public class MainActivity extends Activity {
         if (bundle != null) {
             fragment.setArguments(bundle);
         }
+
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
+
+    private final static String TAG_CLUSTER_MAP = "TAG_CLUSTER_MAP";
+    private void switchToStreetView() {
+        final ExploreFragment fragment = new ExploreFragment();
+        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame, fragment, TAG_CLUSTER_MAP);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.v(MainActivity.LOG, "onBackPressed()");
+        ClusterFragment cf = (ClusterFragment) getFragmentManager().findFragmentById(R.id.content_frame);
+        cf.onResume();
+    }
+
+//    @Override
+//    public void onBackPressed() {
+//        final Myfragment fragment = (Myfragment) getFragmentManager().findFragmentByTag(TAG_CLUSTER_MAP);
+//        if (fragment.allowBackPressed()) { // and then you define a method allowBackPressed with the logic to allow back pressed or not
+//            super.onBackPressed();
+//        }
+//    }
 
     @Override
     public void setTitle(CharSequence title) {

@@ -1,19 +1,11 @@
 package com.example.android.navigationdrawerexample;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
-
-import java.io.InputStream;
 
 public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationRecord> implements ClusterItem {
 
@@ -75,7 +67,7 @@ public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationReco
     }
 
     public String getURL() {
-        return "http://maps.googleapis.com/maps/api/streetview?size=640x400&location=" + getLatitude() + "," + getLongitude() + "&fov=90&heading=" +
-        getBearing() + "&pitch=" + getTilt();
+        return "https://maps.googleapis.com/maps/api/streetview?size=640x400&location=" + getLatitude() + "," + getLongitude() + "&fov=90&heading=" +
+        getBearing() + "&pitch=" + getTilt() + "&key=" + MainActivity.STREET_VIEW_IMAGE_API_KEY;
     }
 }
