@@ -20,8 +20,10 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -31,12 +33,12 @@ import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     public static final String LOG = "SILVER_LOG";
-    private CharSequence mTitle;
     static public ImageLoader il;
     public ArrayList<Long> newLocationIds;
 
-    public static String STREET_VIEW_IMAGE_API_KEY;
+    private final static String TAG_CLUSTER_MAP = "TAG_CLUSTER_MAP";
 
+    public static String STREET_VIEW_IMAGE_API_KEY;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,61 +56,59 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-
         if (savedInstanceState == null) {
-            switchFragment(3, null);
+            switchFragment(3);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 
     public void switchToExploreWithRecord(StreetViewLocationRecord r) {
         Bundle bundle = new Bundle();
         bundle.putLong("RECORD_ID", r.getId());
-        switchFragment(0, bundle);
+        switchToStreetView(bundle);
     }
 
     public void switchToExploreWithSaved(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("POSITION", position);
-        switchFragment(0, bundle);
+        switchToStreetView(bundle);
     }
 
     public void switchToExploreWithPoint(LatLng point) {
         Bundle bundle = new Bundle();
         bundle.putDouble("MANUAL_LAT", point.latitude);
         bundle.putDouble("MANUAL_LONG", point.longitude);
-        switchFragment(0, bundle);
+        switchToStreetView(bundle);
     }
 
-    public void switchFragment(int position, Bundle bundle) {
+
+    public void switchFragment(int position) {
         //convert position into fragment
         Fragment fragment;
-        if (position == 0) {
-//            fragment = new ExploreFragment();
-            switchToStreetView();
-            return;
-        } else if (position == 1) {
+        if (position == 1) {
             fragment = new FavoritedLocsFragment();
         } else {//if (position == 3) {
             fragment = new ClusterFragment();
-        }
-        if (bundle != null) {
-            fragment.setArguments(bundle);
         }
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
-
-    private final static String TAG_CLUSTER_MAP = "TAG_CLUSTER_MAP";
-    private void switchToStreetView() {
-        final ExploreFragment fragment = new ExploreFragment();
-        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_frame, fragment, TAG_CLUSTER_MAP);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    private void switchToStreetView(Bundle bundle) {
+        ExploreFragment fragment = new ExploreFragment();
+        fragment.setArguments(bundle);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.add(R.id.content_frame, fragment, TAG_CLUSTER_MAP);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 
 
@@ -120,17 +120,8 @@ public class MainActivity extends Activity {
         cf.onResume();
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        final Myfragment fragment = (Myfragment) getFragmentManager().findFragmentByTag(TAG_CLUSTER_MAP);
-//        if (fragment.allowBackPressed()) { // and then you define a method allowBackPressed with the logic to allow back pressed or not
-//            super.onBackPressed();
-//        }
-//    }
-
     @Override
     public void setTitle(CharSequence title) {
-        mTitle = title;
-        getActionBar().setTitle(mTitle);
+        getActionBar().setTitle(title);
     }
 }

@@ -52,8 +52,11 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
 
     @Override
     public void onResume() {
-        addNewItems();
         super.onResume();
+        addNewItems();
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+        getActivity().getActionBar().setHomeButtonEnabled(false);
+
     }
 
     private void addNewItems() {

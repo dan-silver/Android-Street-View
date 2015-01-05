@@ -72,6 +72,9 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActivity().getActionBar().setHomeButtonEnabled(true);
+
         activity = getActivity();
         Log.v(MainActivity.LOG, "onCreateView()");
         if (view != null) {
