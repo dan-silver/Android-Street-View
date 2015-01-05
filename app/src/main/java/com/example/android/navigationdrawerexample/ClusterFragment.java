@@ -1,6 +1,5 @@
 package com.example.android.navigationdrawerexample;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;

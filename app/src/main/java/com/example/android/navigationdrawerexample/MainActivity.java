@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            switchFragment(3);
+            switchToFragment(new ClusterFragment(), null);
         }
     }
 
@@ -92,21 +92,11 @@ public class MainActivity extends Activity {
         switchToStreetView(bundle);
     }
 
-    public void switchFragment(int position) {
-        //convert position into fragment
-        Fragment fragment;
-        if (position == 1) {
-            fragment = new FavoritedLocsFragment();
-        } else {//if (position == 3) {
-            fragment = new ClusterFragment();
-        }
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+    private void switchToStreetView(Bundle bundle) {
+        switchToFragment(new ExploreFragment(), bundle);
     }
 
-    private void switchToStreetView(Bundle bundle) {
-        ExploreFragment fragment = new ExploreFragment();
+    private void switchToFragment(Fragment fragment, Bundle bundle) {
         fragment.setArguments(bundle);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.add(R.id.content_frame, fragment, TAG_CLUSTER_MAP);
@@ -120,10 +110,5 @@ public class MainActivity extends Activity {
         Log.v(MainActivity.LOG, "onBackPressed()");
         ClusterFragment cf = (ClusterFragment) getFragmentManager().findFragmentById(R.id.content_frame);
         cf.onResume();
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        getActionBar().setTitle(title);
     }
 }
