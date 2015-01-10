@@ -31,11 +31,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     public static final String LOG = "SILVER_LOG";
-    static public ImageLoader il;
-    public ArrayList<Long> newLocationIds;
-
-    public static String STREET_VIEW_IMAGE_API_KEY;
     private final static String TAG_CLUSTER_MAP = "TAG_CLUSTER_MAP";
+    static public ImageLoader il;
+    public static String STREET_VIEW_IMAGE_API_KEY;
+    public ArrayList<Long> newLocationIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
