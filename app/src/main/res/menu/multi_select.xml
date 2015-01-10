@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_discard_favorites"
+    <item
+        android:id="@+id/action_discard_favorites"
         android:icon="@drawable/ic_action_discard"
-        android:title="Remove"
-        android:showAsAction="ifRoom" />
+        android:showAsAction="ifRoom"
+        android:title="Remove" />
 </menu>

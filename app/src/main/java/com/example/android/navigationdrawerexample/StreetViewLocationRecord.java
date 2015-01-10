@@ -16,7 +16,8 @@ public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationReco
     @Ignore
     private Bitmap image;
 
-    public StreetViewLocationRecord() {}
+    public StreetViewLocationRecord() {
+    }
 
     public double getLatitude() {
         return latitude;
@@ -54,13 +55,14 @@ public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationReco
         return this;
     }
 
+    public Bitmap getImage() {
+        return image;
+    }
 
     public void setImage(Bitmap bmp) {
         this.image = bmp;
     }
-    public Bitmap getImage() {
-        return image;
-    }
+
     @Override
     public LatLng getPosition() {
         return new LatLng(getLatitude(), getLongitude());
@@ -68,6 +70,6 @@ public class StreetViewLocationRecord extends SugarRecord<StreetViewLocationReco
 
     public String getURL() {
         return "https://maps.googleapis.com/maps/api/streetview?size=640x400&location=" + getLatitude() + "," + getLongitude() + "&fov=90&heading=" +
-        getBearing() + "&pitch=" + getTilt() + "&key=" + MainActivity.STREET_VIEW_IMAGE_API_KEY;
+                getBearing() + "&pitch=" + getTilt() + "&key=" + MainActivity.STREET_VIEW_IMAGE_API_KEY;
     }
 }

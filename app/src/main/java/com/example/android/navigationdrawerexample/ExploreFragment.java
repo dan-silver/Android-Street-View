@@ -1,6 +1,5 @@
 package com.example.android.navigationdrawerexample;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -66,7 +65,7 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         menu.removeGroup(R.id.group_cluster);
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -105,11 +104,11 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
         StreetViewPanoramaCamera camera = streetViewPanorama.getPanoramaCamera();
 
         StreetViewLocationRecord r = new StreetViewLocationRecord();
-                                 r.setLatitude(location.latitude)
-                                  .setLongitude(location.longitude)
-                                  .setTilt(camera.tilt)
-                                  .setBearing(camera.bearing)
-                                  .save();
+        r.setLatitude(location.latitude)
+                .setLongitude(location.longitude)
+                .setTilt(camera.tilt)
+                .setBearing(camera.bearing)
+                .save();
         Toast.makeText(getActivity().getApplicationContext(), "Saved!", Toast.LENGTH_SHORT).show();
         activity.newLocationIds.add(r.getId());
         Log.v(MainActivity.LOG, "added id: " + r.getId() + "to the arraylist!");
@@ -128,10 +127,10 @@ public class ExploreFragment extends Fragment implements OnStreetViewPanoramaRea
         if (args == null) return;
 
         if (args.containsKey("RECORD_ID")) {
-                Log.v(MainActivity.LOG, "args contained RECORD_ID");
-                long id = args.getLong("RECORD_ID");
-                StreetViewLocationRecord savedLocation = StreetViewLocationRecord.findById(StreetViewLocationRecord.class, id);
-                setLocation(savedLocation);
+            Log.v(MainActivity.LOG, "args contained RECORD_ID");
+            long id = args.getLong("RECORD_ID");
+            StreetViewLocationRecord savedLocation = StreetViewLocationRecord.findById(StreetViewLocationRecord.class, id);
+            setLocation(savedLocation);
         } else if (args.containsKey("MANUAL_LAT")) {
             Log.v(MainActivity.LOG, "args contained MANUAL_LAT");
             double lat = args.getDouble("MANUAL_LAT");

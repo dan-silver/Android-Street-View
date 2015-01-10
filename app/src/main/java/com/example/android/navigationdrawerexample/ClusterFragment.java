@@ -37,10 +37,10 @@ import java.util.List;
  */
 
 public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClickListener, ClusterManager.OnClusterClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterInfoWindowClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterItemClickListener<StreetViewLocationRecord>, ClusterManager.OnClusterItemInfoWindowClickListener<StreetViewLocationRecord> {
-    private ClusterManager<StreetViewLocationRecord> mClusterManager;
-    private GoogleMap mMap;
     private static View view;
     MainActivity activity;
+    private ClusterManager<StreetViewLocationRecord> mClusterManager;
+    private GoogleMap mMap;
 
     private void setUpMapIfNeeded() {
         if (mMap != null)
@@ -106,73 +106,6 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
     public void onMapLongClick(LatLng point) {
         activity.switchToExploreWithPoint(point);
     }
-
-    /**
-     * Draws profile photos inside markers (using IconGenerator).
-     * When there are multiple people in the cluster, draw multiple photos (using MultiDrawable).
-     */
-    private class PersonRenderer extends DefaultClusterRenderer<StreetViewLocationRecord> {
-        private final IconGenerator mIconGenerator = new IconGenerator(getActivity());
-        private final IconGenerator mClusterIconGenerator = new IconGenerator(getActivity());
-        private final ImageView mImageView;
-        private final ImageView mClusterImageView;
-        private final int mDimensionWidth;
-        private final int mDimensionHeight;
-
-        public PersonRenderer() {
-            super(getActivity(), mMap, mClusterManager);
-
-            View multiProfile = getActivity().getLayoutInflater().inflate(R.layout.multi_profile, null);
-            mClusterIconGenerator.setContentView(multiProfile);
-            mClusterImageView = (ImageView) multiProfile.findViewById(R.id.image);
-
-            mImageView = new ImageView(getActivity());
-            mDimensionWidth = (int) getResources().getDimension(R.dimen.cluster_image_width);
-            mDimensionHeight = (int) getResources().getDimension(R.dimen.cluster_image_height);
-
-            mImageView.setLayoutParams(new ViewGroup.LayoutParams(mDimensionWidth, mDimensionHeight));
-            mIconGenerator.setContentView(mImageView);
-        }
-
-        @Override
-        protected void onBeforeClusterItemRendered(StreetViewLocationRecord r, MarkerOptions markerOptions) {
-            // Draw a single record
-            // Load image, decode it to Bitmap and return Bitmap to callback
-            mImageView.setImageBitmap(r.getImage());
-            Bitmap icon = mIconGenerator.makeIcon();
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
-        }
-
-
-        @Override
-        protected void onBeforeClusterRendered(Cluster<StreetViewLocationRecord> cluster, MarkerOptions markerOptions) {
-            // Draw multiple people.
-            // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
-            List<Drawable> profilePhotos = new ArrayList<>(Math.min(4, cluster.getSize()));
-
-            for (StreetViewLocationRecord p : cluster.getItems()) {
-                // Draw 4 at most.
-                if (profilePhotos.size() == 4) break;
-                Bitmap bmp = p.getImage();
-                Drawable drawable = new BitmapDrawable(null, bmp);
-                drawable.setBounds(0, 0, mDimensionWidth, mDimensionHeight);
-                profilePhotos.add(drawable);
-            }
-            MultiDrawable multiDrawable = new MultiDrawable(profilePhotos);
-            multiDrawable.setBounds(0, 0, mDimensionWidth, mDimensionHeight);
-
-            mClusterImageView.setImageDrawable(multiDrawable);
-            Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
-        }
-
-        @Override
-        protected boolean shouldRenderAsCluster(Cluster cluster) {
-            // Always render clusters.
-            return cluster.getSize() > 1;
-        }
-    }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -260,6 +193,72 @@ public class ClusterFragment extends Fragment implements GoogleMap.OnMapLongClic
                     mClusterManager.cluster();
                 }
             });
+        }
+    }
+
+    /**
+     * Draws profile photos inside markers (using IconGenerator).
+     * When there are multiple people in the cluster, draw multiple photos (using MultiDrawable).
+     */
+    private class PersonRenderer extends DefaultClusterRenderer<StreetViewLocationRecord> {
+        private final IconGenerator mIconGenerator = new IconGenerator(getActivity());
+        private final IconGenerator mClusterIconGenerator = new IconGenerator(getActivity());
+        private final ImageView mImageView;
+        private final ImageView mClusterImageView;
+        private final int mDimensionWidth;
+        private final int mDimensionHeight;
+
+        public PersonRenderer() {
+            super(getActivity(), mMap, mClusterManager);
+
+            View multiProfile = getActivity().getLayoutInflater().inflate(R.layout.multi_profile, null);
+            mClusterIconGenerator.setContentView(multiProfile);
+            mClusterImageView = (ImageView) multiProfile.findViewById(R.id.image);
+
+            mImageView = new ImageView(getActivity());
+            mDimensionWidth = (int) getResources().getDimension(R.dimen.cluster_image_width);
+            mDimensionHeight = (int) getResources().getDimension(R.dimen.cluster_image_height);
+
+            mImageView.setLayoutParams(new ViewGroup.LayoutParams(mDimensionWidth, mDimensionHeight));
+            mIconGenerator.setContentView(mImageView);
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(StreetViewLocationRecord r, MarkerOptions markerOptions) {
+            // Draw a single record
+            // Load image, decode it to Bitmap and return Bitmap to callback
+            mImageView.setImageBitmap(r.getImage());
+            Bitmap icon = mIconGenerator.makeIcon();
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+        }
+
+
+        @Override
+        protected void onBeforeClusterRendered(Cluster<StreetViewLocationRecord> cluster, MarkerOptions markerOptions) {
+            // Draw multiple people.
+            // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
+            List<Drawable> profilePhotos = new ArrayList<>(Math.min(4, cluster.getSize()));
+
+            for (StreetViewLocationRecord p : cluster.getItems()) {
+                // Draw 4 at most.
+                if (profilePhotos.size() == 4) break;
+                Bitmap bmp = p.getImage();
+                Drawable drawable = new BitmapDrawable(null, bmp);
+                drawable.setBounds(0, 0, mDimensionWidth, mDimensionHeight);
+                profilePhotos.add(drawable);
+            }
+            MultiDrawable multiDrawable = new MultiDrawable(profilePhotos);
+            multiDrawable.setBounds(0, 0, mDimensionWidth, mDimensionHeight);
+
+            mClusterImageView.setImageDrawable(multiDrawable);
+            Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+        }
+
+        @Override
+        protected boolean shouldRenderAsCluster(Cluster cluster) {
+            // Always render clusters.
+            return cluster.getSize() > 1;
         }
     }
 }

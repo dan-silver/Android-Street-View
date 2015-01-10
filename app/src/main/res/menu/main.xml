@@ -15,12 +15,14 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_random"
+    <item
+        android:id="@+id/action_random"
         android:icon="@drawable/dice"
-        android:title="@string/random"
-        android:showAsAction="ifRoom" />
-    <item android:id="@+id/action_favoriteLocation"
+        android:showAsAction="ifRoom"
+        android:title="@string/random" />
+    <item
+        android:id="@+id/action_favoriteLocation"
         android:icon="@drawable/ic_action_camera"
-        android:title="@string/action_favorite"
-        android:showAsAction="ifRoom" />
+        android:showAsAction="ifRoom"
+        android:title="@string/action_favorite" />
 </menu>
