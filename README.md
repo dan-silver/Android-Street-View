@@ -1,4 +1,4 @@
-Android-Maps-Street-View-Test
+Android Street View
 =============================
 
 Allows users to explore street view and store their favorite locations
